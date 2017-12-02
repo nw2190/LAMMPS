@@ -57,7 +57,7 @@ class AVAE(object):
 
         # Loss function weights
         self.loss_tolerance = 0.5
-        self.adv_loss_tolerance = 0.25
+        self.adv_loss_tolerance = 0.1
         self.l2_weight = 1.0
         self.reg_weight = 0.00005
         self.kl_weight = 0.5
