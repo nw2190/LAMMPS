@@ -47,7 +47,7 @@ class AVAE(object):
         self.vbatch_size = self.batch_size
 
         # Early stopping criterion
-        self.stopping_step = 250
+        self.stopping_step = 100000
         self.stopping_size = self.batch_size
         self.stopping_level = 0.001
 
