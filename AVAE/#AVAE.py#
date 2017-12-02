@@ -56,17 +56,16 @@ class AVAE(object):
         self.latent_chans = 50
 
         # Loss function weights
-        self.loss_tolerance = 0.5
-        self.adv_loss_tolerance = 0.25
+        self.loss_tolerance = 0.33
         self.l2_weight = 1.0
         self.reg_weight = 0.00005
         self.kl_weight = 0.5
         self.adv_weight = 0.5
 
         # Specify start of adversarial training
-        self.disc_start = 2500
-        self.adv_start = 5000
-        self.adv_end = 15000
+        self.disc_start = 1500
+        self.adv_start = 3000
+        self.adv_end = 10000
                                         
 
         template = np.load('./Arrays/template.npy')
@@ -505,7 +504,7 @@ class AVAE(object):
                         # Update loss function weights
                         self.kl_weight = np.min([self.kl_weight, self.loss_tolerance*l2_loss/kl_loss])
                         self.reg_weight = np.min([self.reg_weight, self.loss_tolerance*l2_loss/reg_loss])
-                        self.adv_weight = np.min([self.adv_weight, self.adv_loss_tolerance*l2_loss/adv_loss])
+                        self.adv_weight = np.min([self.adv_weight, self.loss_tolerance*l2_loss/adv_loss])
 
                         print('\n----------------------------------------------------------------------------------')
                         print('|  Validation Loss = %.5f    reg_weight = %.2E     kl_weight = %.4f     |' \
@@ -537,7 +536,7 @@ class AVAE(object):
                             return 0
 
                         
-
+                    
                         
             # Reset starting batch_id for next epoch
             start_batch_id = 0
