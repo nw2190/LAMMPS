@@ -1,0 +1,6 @@
+model_checkpoint_path: "AVAE.model-2551"
+all_model_checkpoint_paths: "AVAE.model-2483"
+all_model_checkpoint_paths: "AVAE.model-2500"
+all_model_checkpoint_paths: "AVAE.model-2517"
+all_model_checkpoint_paths: "AVAE.model-2534"
+all_model_checkpoint_paths: "AVAE.model-2551"

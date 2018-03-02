@@ -1,0 +1,22 @@
+# Ensight case file
+
+FORMAT
+type: ensight gold
+
+GEOMETRY
+model: 1 1 p_disk_1120.xyz
+
+VARIABLE
+scalar per node: 1 1 Damage p_disk_1120.damage
+
+TIME
+time set: 1
+number of steps: 1
+filename start number: 0
+filename increment: 1
+time values:
+0
+
+FILE
+file set: 1
+number of steps: 1

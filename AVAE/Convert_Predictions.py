@@ -6,8 +6,8 @@ from ensight import ensight
 
 from encoder import *
 
-
-COUNT = 10000
+STEPS = 5000
+#STEPS = 100000
 
 pred_dir = './Model/results/'
 lammps_dir = pred_dir + 'LAMMPS/'
@@ -18,7 +18,7 @@ if not os.path.exists(lammps_dir):
 
 skip_IDs = []
 
-for step in range(1, COUNT + 1):
+for step in range(1, STEPS + 1):
     p_files = glob.glob(pred_dir + str(step) + '_prediction.npy')
     s_files = glob.glob(pred_dir + str(step) + '_solution.npy')
 
@@ -36,7 +36,7 @@ for step in range(1, COUNT + 1):
 # Change to LAMMPS directory to store dump files
 os.chdir(lammps_dir)
 
-for ID in range(1, COUNT + 1):
+for ID in range(1, STEPS + 1):
     if not (ID in skip_IDs):
         
         #p_name = lammps_dir + 'prediction_dump_' + str(ID) + '.peri'
