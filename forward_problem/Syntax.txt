@@ -1,0 +1,7 @@
+lammps -in in.peri
+python2 convert.py
+paraview disk.case
+
+SETTINGS:
+Representation [disk.case]  ~  Points
+Representation [Calculator1]  ~  Surface
