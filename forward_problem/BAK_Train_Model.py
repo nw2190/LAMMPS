@@ -33,12 +33,12 @@ with tf.name_scope('Training_Data'):
 # Specify Intermediate Channel Sizes and Node Counts
 #nodes = [16, 32, 16*16*resolution]
 middle_channels = 64
-middle_res = 4
+middle_res = 8
 nodes = [10, 25, 50, middle_res*middle_res*middle_channels]
-channels = [64, 64, 32, 16, n_channels_out]
+channels = [64, 32, 16, n_channels_out]
 
 # Specify Kernel/Filter Sizes
-kernels = [2, 3, 3, 3]
+kernels = [3, 3, 3]
 
 # Convolutional Neural Network Model
 def conv_net(X):
@@ -56,20 +56,14 @@ def conv_net(X):
     n_ind += 1; node_count = nodes[n_ind]
     Y = dense_layer(Y, node_count, training=training)
 
-    # Reshape:  [None, 4, 4, C]
+    # Reshape:  [None, 8, 8, C]
     Y = tf.expand_dims(Y,2)
     Y = tf.expand_dims(Y,3)
     Y = tf.reshape(Y, [-1, middle_res, middle_res, middle_channels])
 
-    # [4, 4]  -->  [8, 8]
+    # [8, 8]  -->  [16, 16]
     c_ind = 0; channel_count = channels[c_ind]
     k_ind = 0; kernel_size = kernels[k_ind]
-    #Y = transpose_inception_v3(Y, channel_count, stride=2, training=training)
-    Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, training=training)
-
-    # [8, 8]  -->  [16, 16]
-    c_ind += 1; channel_count = channels[c_ind]
-    k_ind += 1; kernel_size = kernels[k_ind]
     #Y = transpose_inception_v3(Y, channel_count, stride=1, training=training)
     Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, training=training)
 
