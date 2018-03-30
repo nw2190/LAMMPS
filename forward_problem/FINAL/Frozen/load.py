@@ -45,6 +45,8 @@ def read_data(data_ID, data_directory, **keyword_parameters):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--frozen_model_folder", default="../Model/", type=str, help="Model folder to export")
+    parser.add_argument("--x_val", default="0.0", type=str, help="x-coordinate")
+    parser.add_argument("--y_val", default="0.0", type=str, help="y-coordinate")
     #parser.add_argument("--frozen_model_filename", default="../Model/frozen_model_1.pb", type=str, help="Frozen model file to import")
     args = parser.parse_args()
 
@@ -83,7 +85,12 @@ if __name__ == '__main__':
         #x_data = np.array( read_data(0,'../Setup/Data/') )
         #x_data = [ np.transpose(x_data, (1, 2, 0)) ]
 
-        x_data = np.zeros([1,2])
+        SCALING = 10e3
+        #x_data = np.zeros([1,2])
+        #x_data = SCALING*np.array([[0.0,-0.015]])
+        x_val = float(args.x_val)
+        y_val = float(args.y_val)
+        x_data = SCALING*np.array([[y_val,x_val]])
         y_data = np.expand_dims(template_array,0)
         
         y_out = sess.run(y_masked, feed_dict={

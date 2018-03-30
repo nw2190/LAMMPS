@@ -1,0 +1,3 @@
+model_checkpoint_path: "epoch1_model-1"
+all_model_checkpoint_paths: "FINAL_MASKED-0"
+all_model_checkpoint_paths: "epoch1_model-1"
