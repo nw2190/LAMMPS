@@ -1,0 +1,52 @@
+LAMMPS (16 Mar 2018)
+# DEFINE NUMBER OF X,Z STEPS
+# l = velocity k = indenter radius i, j = hiting location
+variable imax equal 10
+variable jmax equal 3
+variable kmax equal 1
+variable lmax equal 1
+variable countmax equal "v_imax*v_jmax*v_kmax*v_lmax"
+
+# DEFINE TOTAL NUMBER OF STEPS
+variable count loop ${countmax}
+variable count loop 30
+
+print "imax = ${imax}"
+imax = 10
+print "jmax = ${jmax}"
+jmax = 3
+print "kmax = ${kmax}"
+kmax = 1
+print "lmax = ${lmax}"
+lmax = 1
+
+# START LOOPS
+# Loop 1
+label start_of_loop_1
+variable l loop ${lmax}
+variable l loop 1
+
+# Loop 2
+label start_of_loop_2
+variable k loop ${kmax}
+variable k loop 1
+
+# Loop 3
+label start_of_loop_3
+variable i loop ${imax}
+variable i loop 10
+
+# Loop 4
+label start_of_loop_4
+variable j loop ${jmax}
+variable j loop 3
+clear
+
+# DEFINE INITIAL CONDITIONS
+# small Peridynamic cylinder hit by projectile
+units		si
+boundary        s s s
+dimension	3
+atom_style      peri
+ERROR: Unknown atom style (/tmp/yaourt-tmp-nick/aur-lammps-git/src/lammps/src/atom.cpp:498)
+Last command: atom_style      peri

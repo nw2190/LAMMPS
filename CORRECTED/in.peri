@@ -1,0 +1,120 @@
+# DEFINE NUMBER OF X,Z STEPS
+# l = velocity k = indenter radius i, j = hiting location
+variable imax equal 10
+variable jmax equal 3
+variable kmax equal 1
+variable lmax equal 1
+variable countmax equal "v_imax*v_jmax*v_kmax*v_lmax"
+
+# DEFINE TOTAL NUMBER OF STEPS
+variable count loop ${countmax}
+
+print "imax = ${imax}"
+print "jmax = ${jmax}"
+print "kmax = ${kmax}"
+print "lmax = ${lmax}"
+
+# START LOOPS
+# Loop 1
+label start_of_loop_1
+variable l loop ${lmax}
+
+# Loop 2
+label start_of_loop_2
+variable k loop ${kmax}
+
+# Loop 3
+label start_of_loop_3
+variable i loop ${imax}
+
+# Loop 4
+label start_of_loop_4
+variable j loop ${jmax}
+clear
+
+# DEFINE INITIAL CONDITIONS
+# small Peridynamic cylinder hit by projectile
+units		si
+boundary        s s s
+dimension	3
+atom_style      peri
+atom_modify	map array
+neighbor        0.0010 bin
+
+# small target
+lattice         sc 0.001
+region          target cylinder y 0.0 0.0 0.037 -0.0025 0.0 units box
+create_box      1 target
+create_atoms    1 region target
+
+pair_style      peri/pmb
+pair_coeff      * * 1.6863e22 0.0015001 0.0005 0.25
+set             group all density 2200
+set             group all volume 1.25e-10
+velocity        all set 0.0 0.0 0.0 sum no units box
+fix             1 all nve
+fix             2 all indent 1e16 sphere v_x v_y v_z v_w units box
+
+
+print "Iteration:  i = $i , j = $j, k = $k, l = $l "
+
+print " "
+print " "
+print "----------------------------------------------------------------"
+print "Iteration ${count} of ${countmax}"
+print "----------------------------------------------------------------"
+print " "
+
+# Reset current timestep
+reset_timestep 0
+
+# spherical indenter to shatter target
+
+#q is velocity for indent.txt
+variable         q equal "1+(0.001*v_l)"
+
+# indenter radius (w) for indent.txt
+variable         w equal "0.0020+(0.001*v_k)"
+
+#disk radius(v_r)
+variable r equal 0.037
+
+variable        y0 equal 0.00510
+variable        vy equal -100
+variable        y equal "v_y0 + v_q*step*dt*v_vy"
+
+#Hit the whole disk
+#variable        x equal "cos((PI/2)*v_i/v_imax)*((v_i-1)/v_imax*v_r)"
+#variable        z equal "sin((PI/2)*v_j/v_jmax)*((v_j-1)/v_jmax*v_r)"
+
+#Hit the disk reduced 5times compare to disk size
+variable        x equal "cos((2*PI)*v_i/v_imax)*(v_j/v_jmax)*v_r*(0.5)"
+variable        z equal "sin((2*PI)*v_i/v_imax)*(v_j/v_jmax)*v_r*(0.5)"
+
+compute         1 all damage/atom
+timestep        1.0e-7
+thermo          100
+
+dump            ${count} all custom 1000 Data/dump_${count}.peri id type x y z c_1
+
+run             1000
+
+# SAVE INDENTER
+print $x file Data/indenter_${count}.txt
+print $z append Data/indenter_${count}.txt
+print $w append Data/indenter_${count}.txt
+print $q append Data/indenter_${count}.txt
+
+next j
+next count
+jump SELF start_of_loop_4
+
+next i
+jump SELF start_of_loop_3
+
+next k
+jump SELF start_of_loop_2
+
+next l
+jump SELF start_of_loop_1
+
