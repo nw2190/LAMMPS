@@ -24,6 +24,9 @@ transformations_count = (transformations_array.shape)[0]
 total_batches = data_batches*transformations_count*epochs
 
 
+learn_decay_rate = 0.5
+
+
 # Define placeholders to store input batches and corresponding predictions
 with tf.name_scope('Training_Data'):
     x = tf.placeholder(tf.float32, [None, n_channels_in], name='x')
@@ -63,6 +66,12 @@ def conv_net(X):
     Y = tf.expand_dims(Y,3)
     Y = tf.reshape(Y, [-1, middle_res, middle_res, middle_channels])
 
+    # [4, 4]  -->  [8, 8]
+    #c_ind = 0; channel_count = channels[c_ind]
+    #k_ind = 0; kernel_size = kernels[k_ind]
+    #Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=1, training=training)
+    #Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, training=training)
+
     # [8, 8]  -->  [16, 16]
     c_ind = 0; channel_count = channels[c_ind]
     k_ind = 0; kernel_size = kernels[k_ind]
@@ -73,12 +82,15 @@ def conv_net(X):
     c_ind += 1; channel_count = channels[c_ind]
     k_ind += 1; kernel_size = kernels[k_ind]
     Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, training=training)
+    #Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=1, training=training)
+    #Y = tf.image.resize_images(Y,[32,32])
 
     # [32, 32]  -->  [64, 64]
     channel_count = n_channels_out
     k_ind += 1; kernel_size = kernels[k_ind]
     Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, activation=None, add_bias=True, regularize=False, drop_rate=0.0, batch_norm=False,training=training)
-
+    #Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=1, activation=None, add_bias=True, regularize=False, drop_rate=0.0, batch_norm=False,training=training)
+    #Y = tf.image.resize_images(Y,[64,64])
     Y = tf.nn.sigmoid(Y)
 
     return Y
@@ -125,6 +137,8 @@ with tf.name_scope('VAE_Net_Masked'):
 # Mean Square Cost Function
 with tf.name_scope('MS_Cost'):
     ms_cost = tf.reduce_sum(tf.reduce_sum(tf.pow(masked_pred-masked_y, 2), axis=[1,2]))
+    #ms_cost = tf.reduce_sum(tf.reduce_sum(tf.multiply(0.25+np.power(masked_y,2),tf.pow(masked_pred-masked_y, 2)), axis=[1,2]))
+    #ms_cost = tf.reduce_sum(tf.reduce_sum(tf.multiply(2.0/4.0 + tf.multiply(np.power(masked_y,1),np.power(masked_y - 1.0,1)),tf.pow(masked_pred-masked_y, 2)), axis=[1,2]))
     #ms_cost = tf.reduce_mean(tf.reduce_mean(tf.pow(masked_pred-masked_y, 2), axis=[1,2]))
 
 
@@ -189,8 +203,8 @@ with tf.Session() as sess:
         data_indices = train_indices
         shuffle(data_indices)
 
-        if n % 2 == 0:
-            l_rate = 0.5*l_rate
+        if (n+1) % 2 == 0:
+            l_rate = learn_decay_rate*l_rate
         
         # Define indices to iterate through
         indices = range(1,data_batches)

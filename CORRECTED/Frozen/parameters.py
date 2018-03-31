@@ -58,8 +58,8 @@ TRAIN = (not TEST)
 LOAD_PREVIOUS = False
 
 # Specify Directories
-data_directory = './Data/'
-array_directory = './Arrays/'
+data_directory = '../Data/'
+array_directory = '../Arrays/'
 
 # Specify where to save model checkpoints
 model_dir = './Model/'

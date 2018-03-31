@@ -33,6 +33,7 @@ def read_data(ID, **keyword_parameters):
     #template_file = array_directory + 'template.npy'
     #template = np.load(template_file)
 
+    ADD_NOISE = True
     SCALING = 10e3
     
     # Define filenames
@@ -51,6 +52,9 @@ def read_data(ID, **keyword_parameters):
     # Only use x coordinate
     #data = data[0:1]
 
+    if ADD_NOISE:
+        data = data + 0.000025*np.random.normal(size=[2])
+    
     data = SCALING*data
     
     #if ('transformation' in keyword_parameters):
