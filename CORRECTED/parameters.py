@@ -9,7 +9,7 @@ NEW_CV_INDICES = True
 model_name = 'model'
 
 # Specify current meshes and data available
-data_count = 2000
+data_count = 1000
 
 if NEW_CV_INDICES:
     cross_validation = data_count//5

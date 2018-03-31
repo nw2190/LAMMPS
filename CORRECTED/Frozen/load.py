@@ -1,9 +1,9 @@
 import argparse
 import numpy as np
 import tensorflow as tf
-from reader_frozen import plot_prediction, read_data, convert_time
-
 import time
+
+from convert_time import convert_time
 
 def load_graph(frozen_model_folder):
 
@@ -132,6 +132,4 @@ if __name__ == '__main__':
             
             np.save('y_out',pred_layered)
             
-            #plot_prediction(k, y_out, Model=0, CV=args.CV, Rm_Outliers=False, Filter=True, Plot_Error=False)
-
     print('\n')

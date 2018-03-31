@@ -3,8 +3,14 @@ import pandas as pd
 import time
 import csv
 
-from parameters import *
+#from parameters import *
 
+lammps_dir = './'
+
+resolution = 64
+data_directory = './Data/'
+array_directory = './Arrays/'
+output_layers = 1
 layers = output_layers
 
 # Specify domain under consideration
@@ -250,8 +256,8 @@ def encode(ID):
                     
     
     # Save atom counts and damage for each bin
-    np.save(output_count_filename, bin_counts)
-    np.save(output_damage_filename, bin_damage)
+    #np.save(output_count_filename, bin_counts)
+    #np.save(output_damage_filename, bin_damage)
     np.save(output_average_filename, avg_damage)
 
 #    print('Non-zero entries for ID = ' + str(ID) + ':  ' + str(np.count_nonzero(avg_damage)))

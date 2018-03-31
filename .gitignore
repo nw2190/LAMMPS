@@ -112,3 +112,4 @@ ENV/
 *.brf
 *.synctex.gz
 *.npy
+dump_*

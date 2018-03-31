@@ -1,6 +1,6 @@
 import csv
 
-N = 10
+N = 5
 increment = 200
 
 for n in range(0,N):

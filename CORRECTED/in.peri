@@ -1,7 +1,7 @@
 # DEFINE NUMBER OF X,Z STEPS
 # l = velocity k = indenter radius i, j = hiting location
-variable imax equal 10
-variable jmax equal 3
+variable imax equal 50
+variable jmax equal 20
 variable kmax equal 1
 variable lmax equal 1
 variable countmax equal "v_imax*v_jmax*v_kmax*v_lmax"
