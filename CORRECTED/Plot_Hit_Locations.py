@@ -5,9 +5,9 @@ import csv
 DATA_SET = 1
 
 if DATA_SET == 1:
-    data_directory = './Data_I/'
+    data_directory = './Data/'
     N_START = 0
-    N = 1021
+    N = 2000
 else:
     data_directory = './Data/'
     N_START = 1000

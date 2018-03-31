@@ -29,6 +29,7 @@ with tf.name_scope('Training_Data'):
     x = tf.placeholder(tf.float32, [None, n_channels_in], name='x')
     y = tf.placeholder(tf.float32, [None, None, None, n_channels_out], name='y')
     template = tf.placeholder(tf.float32, [None, None, n_channels_out], name='template')
+    learning_rt = tf.placeholder(tf.float32, name='learning_rt')
 
 
 # Specify Intermediate Channel Sizes and Node Counts
@@ -134,7 +135,7 @@ with tf.name_scope('Total_Cost'):
 # Run Adam Optimizer to minimize cost
 with tf.name_scope('Optimizer'):
     if TRAIN:
-        optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate,epsilon=1e-06).minimize(cost)
+        optimizer = tf.train.AdamOptimizer(learning_rate=learning_rt,epsilon=1e-06).minimize(cost)
 
 
 # Define summary of cost for log file
@@ -179,6 +180,7 @@ with tf.Session() as sess:
     template_array = np.array([template_array[:,:,0]])
     template_array = np.transpose(template_array,[1,2,0])
 
+    l_rate = learning_rate
     
     for n in range(0,epochs):
         # Randomize Batches
@@ -186,6 +188,9 @@ with tf.Session() as sess:
         #shuffle(data_indices)
         data_indices = train_indices
         shuffle(data_indices)
+
+        if n % 2 == 0:
+            l_rate = 0.5*l_rate
         
         # Define indices to iterate through
         indices = range(1,data_batches)
@@ -197,11 +202,11 @@ with tf.Session() as sess:
                 batch_x, batch_y = train_next_batch(M, data_indices, data_batch_size, transform)
                 
                 # Run Optimizer and Update Weights
-                sess.run(optimizer, feed_dict={x: batch_x, y: batch_y, template: template_array})
+                sess.run(optimizer, feed_dict={x: batch_x, y: batch_y, template: template_array, learning_rt: l_rate})
                 
                 # Display Minibatch Loss
                 if step % display_step == 0:
-                    loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y, template: template_array})
+                    loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y, template: template_array, learning_rt: l_rate})
                     display_progress(loss, start_time, step, total_batches, n)
                     
                 # Plot Prediction

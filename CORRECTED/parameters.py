@@ -9,11 +9,11 @@ NEW_CV_INDICES = True
 model_name = 'model'
 
 # Specify current meshes and data available
-data_count = 1000
+data_count = 2000
 
 if NEW_CV_INDICES:
     cross_validation = data_count//5
-    overall = np.random.permutation(range(data_count))
+    overall = np.random.permutation(range(1,data_count+1))
     cv_indices = np.reshape(overall, [5,-1])
     np.save('cv_indices.npy',cv_indices)
 else:
@@ -63,7 +63,7 @@ n_channels_out = 1    ## Number of channels for output images
 #save_step = 100
 display_step = 10
 plot_step = 10
-save_step = 10
+save_step = 500
 
 
 # Specify whether to train and/or test
