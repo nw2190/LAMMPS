@@ -113,3 +113,8 @@ ENV/
 *.synctex.gz
 *.npy
 dump_*
+prediction_dump_*
+solution_dump_*
+*.case
+*.xyz
+*.damage
