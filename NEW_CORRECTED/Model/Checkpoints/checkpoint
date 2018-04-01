@@ -1,0 +1,4 @@
+model_checkpoint_path: "epoch1_model-68000"
+all_model_checkpoint_paths: "epoch1_model-66000"
+all_model_checkpoint_paths: "epoch1_model-67000"
+all_model_checkpoint_paths: "epoch1_model-68000"
