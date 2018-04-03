@@ -5,7 +5,8 @@ import csv
 
 data_directory = './Data/'
 N_START = 0
-N = 2325
+#N = 2325
+N = 2925
 
         
 

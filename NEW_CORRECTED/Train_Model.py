@@ -33,14 +33,14 @@ with tf.name_scope('Training_Data'):
     y = tf.placeholder(tf.float32, [None, None, None, n_channels_out], name='y')
     template = tf.placeholder(tf.float32, [None, None, n_channels_out], name='template')
     learning_rt = tf.placeholder(tf.float32, name='learning_rt')
-
+    
 
 # Specify Intermediate Channel Sizes and Node Counts
 #nodes = [16, 32, 16*16*resolution]
 middle_channels = 64
 middle_res = 8
-nodes = [10, 25, 50, middle_res*middle_res*middle_channels]
-channels = [64, 32, n_channels_out]
+nodes = [10, 10, 25, 50, middle_res*middle_res*middle_channels]
+channels = [64, 32, 16, n_channels_out]
 
 # Specify Kernel/Filter Sizes
 kernels = [3, 3, 3]
@@ -61,42 +61,38 @@ def conv_net(X):
     n_ind += 1; node_count = nodes[n_ind]
     Y = dense_layer(Y, node_count, training=training)
 
+    n_ind += 1; node_count = nodes[n_ind]
+    Y = dense_layer(Y, node_count, training=training)
+
     # Reshape:  [None, 8, 8, C]
     Y = tf.expand_dims(Y,2)
     Y = tf.expand_dims(Y,3)
     Y = tf.reshape(Y, [-1, middle_res, middle_res, middle_channels])
 
-    # [4, 4]  -->  [8, 8]
-    #c_ind = 0; channel_count = channels[c_ind]
-    #k_ind = 0; kernel_size = kernels[k_ind]
-    #Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=1, training=training)
-    #Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, training=training)
-
     # [8, 8]  -->  [16, 16]
     c_ind = 0; channel_count = channels[c_ind]
     k_ind = 0; kernel_size = kernels[k_ind]
     #Y = transpose_inception_v3(Y, channel_count, stride=1, training=training)
+    Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=1, training=training)
     Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, training=training)
 
     # [16, 16]  -->  [32, 32]
     c_ind += 1; channel_count = channels[c_ind]
     k_ind += 1; kernel_size = kernels[k_ind]
     Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, training=training)
-    #Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=1, training=training)
-    #Y = tf.image.resize_images(Y,[32,32])
 
     # [32, 32]  -->  [64, 64]
     channel_count = n_channels_out
     k_ind += 1; kernel_size = kernels[k_ind]
     Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, activation=None, add_bias=True, regularize=False, drop_rate=0.0, batch_norm=False,training=training)
-    #Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=1, activation=None, add_bias=True, regularize=False, drop_rate=0.0, batch_norm=False,training=training)
-    #Y = tf.image.resize_images(Y,[64,64])
+
     Y = tf.nn.sigmoid(Y)
 
     return Y
 
 
 # Define prediction from convolutional neural network
+#pred = conv_net(x)
 with tf.name_scope('VAE_Net'):
     pred = conv_net(x)
     pred = tf.identity(pred, name='prediction')
@@ -137,8 +133,6 @@ with tf.name_scope('VAE_Net_Masked'):
 # Mean Square Cost Function
 with tf.name_scope('MS_Cost'):
     ms_cost = tf.reduce_sum(tf.reduce_sum(tf.pow(masked_pred-masked_y, 2), axis=[1,2]))
-    #ms_cost = tf.reduce_sum(tf.reduce_sum(tf.multiply(0.25+np.power(masked_y,2),tf.pow(masked_pred-masked_y, 2)), axis=[1,2]))
-    #ms_cost = tf.reduce_sum(tf.reduce_sum(tf.multiply(2.0/4.0 + tf.multiply(np.power(masked_y,1),np.power(masked_y - 1.0,1)),tf.pow(masked_pred-masked_y, 2)), axis=[1,2]))
     #ms_cost = tf.reduce_mean(tf.reduce_mean(tf.pow(masked_pred-masked_y, 2), axis=[1,2]))
 
 
@@ -149,7 +143,7 @@ with tf.name_scope('Total_Cost'):
 # Run Adam Optimizer to minimize cost
 with tf.name_scope('Optimizer'):
     if TRAIN:
-        optimizer = tf.train.AdamOptimizer(learning_rate=learning_rt,epsilon=1e-06).minimize(cost)
+        optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate,epsilon=1e-06).minimize(cost)
 
 
 # Define summary of cost for log file
@@ -194,6 +188,13 @@ with tf.Session() as sess:
     template_array = np.array([template_array[:,:,0]])
     template_array = np.transpose(template_array,[1,2,0])
 
+
+    # RUN TO TEST
+    #sess.run(pred, feed_dict={x: batch_x, y: batch_y, template: template_array})
+
+    # Save final checkpoint
+    saver.save(sess, checkpoint_directory + 'FINAL_MASKED', global_step=0)
+        
     l_rate = learning_rate
     
     for n in range(0,epochs):
@@ -203,8 +204,9 @@ with tf.Session() as sess:
         data_indices = train_indices
         shuffle(data_indices)
 
-        if (n+1) % 2 == 0:
+        if (n+1) % 4 == 0:
             l_rate = learn_decay_rate*l_rate
+
         
         # Define indices to iterate through
         indices = range(1,data_batches)

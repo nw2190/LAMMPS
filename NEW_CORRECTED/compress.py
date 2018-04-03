@@ -2,7 +2,7 @@ import os
 import csv
 import numpy as np
 
-DATA_COUNT = 2325
+DATA_COUNT = 2925
 
 data_X = []
 print('\nLoading Data...')
