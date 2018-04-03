@@ -3,7 +3,7 @@ import numpy as np
 import csv
 import os
 
-NEW_CV_INDICES = False
+NEW_CV_INDICES = True
 
 # Set model name for saving checkpoints
 model_name = 'model'
@@ -32,7 +32,7 @@ resolution = train_resolution
 
 # Specify current epoch number and number of epochs to run
 starting_epoch = 1
-epochs = 0
+epochs = 1000
 
 # Training Parameters
 learning_rate = 0.0001
@@ -72,7 +72,7 @@ TEST = False
 TRAIN = (not TEST)
 
 # Specify if previous checkpoint should be loaded
-LOAD_PREVIOUS = True
+LOAD_PREVIOUS = False
 
 # Specify Directories
 data_directory = './Data/'

@@ -18,7 +18,8 @@ def freeze_graph(model_folder):
     
     # Specify output node to compute
     #output_node_names = "VAE_Net/prediction"
-    output_node_names = "VAE_Net_Masked/masked_prediction"
+    #output_node_names = "VAE_Net_Masked/masked_prediction"
+    output_node_names = "VAE_Net_Masked/masked_prediction,VAE_Net_Masked/masked_y"
     
     # Clear devices
     clear_devices = True
