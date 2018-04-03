@@ -126,7 +126,6 @@ if __name__ == '__main__':
             prediction = y_out[0,:,:,:]
             soln = y_data[0,:,:,:]
             ext_indices = (soln == 0.0)
-            z_tensor = 0.0*soln
             prediction[ext_indices] = 0.0
             pred_layered = np.array([prediction[:,:,0],prediction[:,:,0],prediction[:,:,0]])
             pred_layered = np.transpose(pred_layered,(1,2,0))

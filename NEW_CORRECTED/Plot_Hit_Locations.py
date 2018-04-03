@@ -20,7 +20,8 @@ def read_data(ID, **keyword_parameters):
     #template_file = array_directory + 'template.npy'
     #template = np.load(template_file)
 
-    SCALING = 10e3
+    #SCALING = 10e3
+    SCALING = 1
     
     # Define filenames
     input_filename = data_directory + 'indenter_' + str(ID) +'.txt'
@@ -40,16 +41,44 @@ def read_data(ID, **keyword_parameters):
 
     data = SCALING*data
     
-    vals_array = np.array(data)
+    vals_array = np.array(data,dtype=np.float32)
     #print(vals_array)
     return vals_array
 
 
-vals = np.zeros([N,2])
+cv_indices = np.load('./cv_indices.npy')
+train_indices = np.concatenate( (cv_indices[0:0], cv_indices[1:5,:]) ).flatten()
+test_indices = cv_indices[0,:]
 
-for n in range(0,N):
+count = 0
+train_vals = np.zeros([train_indices.size,2])
+for n in train_indices:
     val = read_data(N_START+n+1)
-    vals[n-1,:] = val
+    train_vals[count,:] = val
+    count += 1
 
-plt.scatter(vals[:,0],vals[:,1])
+print(train_vals.shape)
+marker_size = 75.0
+plt.scatter(train_vals[:,0],train_vals[:,1], s=marker_size, c='b')
+
+
+count = 0
+test_vals = np.zeros([test_indices.size,2])
+for n in test_indices:
+    val = read_data(N_START+n+1)
+    test_vals[count,:] = val
+    count += 1
+
+plt.scatter(test_vals[:,0],test_vals[:,1], s=marker_size, c='r')
+
+plt.axis('equal')
+scale = 0.0125
+xmin = -scale
+xmax = scale
+ymin = -scale
+ymax = scale
+plt.xlim((xmin, xmax))
+plt.ylim((ymin, ymax))
+
+
 plt.show()

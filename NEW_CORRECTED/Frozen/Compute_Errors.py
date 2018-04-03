@@ -55,14 +55,16 @@ if __name__ == '__main__':
 
     template = graph.get_tensor_by_name('prefix/Training_Data/template:0')
 
-    template_file = './Arrays/template.npy'
+    template_file = '../Arrays/template.npy'
     template_array = np.load(template_file)
     template_array = np.array([template_array[:,:,0]])
     template_array = np.transpose(template_array,[1,2,0])
 
     
     # Specify number of plots
-    DATA_COUNT = 2000
+    #DATA_COUNT = 2325
+    DATA_COUNT= 2925
+
 
     with tf.Session(graph=graph) as sess:
 
@@ -92,7 +94,7 @@ if __name__ == '__main__':
         times = np.zeros([DATA_COUNT])
         errors = np.zeros([DATA_COUNT])
 
-        TEST = False
+        TEST = True
         
         if TEST:
             indices = test_indices
@@ -117,7 +119,7 @@ if __name__ == '__main__':
 
             end_time = time.time()
             time_elapsed = convert_time(end_time-start_time)
-            print('\nComputation Time:  '  + time_elapsed)
+            #print('\nComputation Time:  '  + time_elapsed)
 
             prediction = y_out[0,:,:,:]
             soln = y_data[0,:,:,:]
@@ -131,7 +133,7 @@ if __name__ == '__main__':
 
             prediction = prediction[:,:,0]
             mse_error = 1.0/prediction.size*np.sum(np.sum(np.power(prediction-true_soln,2), axis=1), axis=0)
-            print('Data %d MSE Error:   %f' %(k,mse_error))
+            #print('Data %d MSE Error:   %f' %(k,mse_error))
 
             times[k-1] = float(time_elapsed[:-1])
             errors[k-1] = mse_error
