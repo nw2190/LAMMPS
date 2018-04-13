@@ -58,7 +58,7 @@ for n in train_indices:
     count += 1
 
 print(train_vals.shape)
-marker_size = 75.0
+marker_size = 50.0
 plt.scatter(train_vals[:,0],train_vals[:,1], s=marker_size, c='b')
 
 

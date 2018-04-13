@@ -1,0 +1,3 @@
+Data count: 3150
+Total wall time: 18:00:57
+Average time: 20.57 seconds

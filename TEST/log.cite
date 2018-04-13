@@ -1,0 +1,15 @@
+This LAMMPS simulation made specific use of work described in the
+following references.  See http://lammps.sandia.gov/cite.html
+for details.
+
+PERI package for Peridynamics:
+
+@Article{Parks08,
+ author = {M. L. Parks, R. B. Lehoucq, S. J. Plimpton, S. A. Silling},
+ title = {Implementing peridynamics within a molecular dynamics code},
+ journal = {Comp.~Phys.~Comm.},
+ year =    2008,
+ volume =  179,
+ pages =   {777--783}
+}
+
