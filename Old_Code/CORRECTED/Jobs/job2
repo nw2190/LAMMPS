@@ -1,0 +1,6 @@
+#!/bin/sh -l
+# FILENAME:  myjobsubmissionfile
+module load python
+# Change to the directory from which you originally submitted this job.
+cd $PBS_O_WORKDIR
+python encode_2.py
