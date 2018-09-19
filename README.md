@@ -2,7 +2,7 @@
 TensorFlow code trained on LAMMPS peridynamics simulations
 
 ### Dependencies
-* [LAMMPS](https://github.com/lammps/lammps) - The molecular dynamics software package used to generate training data (must be compiled with the cmake flag `PKG_PERI=on`).
+* [LAMMPS](https://github.com/lammps/lammps) - The molecular dynamics software used to generate data (must be compiled with the `PKG_PERI=on` flag).
 * [Python](https://www.python.org/) - The code is designed to work with Python 2.7 and Python 3.5 or greater.
 * [TensorFlow](https://www.tensorflow.org/install/) - The software library used to implement the deep convolutional neural network in Python.
 * [NumPy](http://www.numpy.org/) - Arrays are processed in Numpy prior to being fed as tensors into TensorFlow.
