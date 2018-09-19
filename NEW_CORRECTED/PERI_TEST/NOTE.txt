@@ -1,0 +1,17 @@
+loop i 1 100
+with jmax = 5*i at each step
+
+==>  25250 total simulations
+
+
+Subdivision 0:
+loop i 1 55
+dump_1.peri  --  dump_7700.peri
+
+Subdivision 1:
+loop i 56 80
+dump_7701.peri  --  dump_16200.peri
+
+Subdivision 2:
+loop i 81 100
+dump_16201.peri  --  dump_25250.peri
