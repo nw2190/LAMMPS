@@ -18,7 +18,7 @@ $ python Convert_Data.py
 
 ### Parallelization
 
-The data generation process can be sub-divided into separate LAMMPS instances by breaking up the 'i' loop in the 'in.peri' file.  For example, the file can be split into three files 'in_0.peri', 'in_1.peri', 'in_2.peri' corresponding to a partion of the full 'i' loop and executed separately by running:
+The data generation process can be sub-divided into separate LAMMPS instances by breaking up the 'i' loop in the 'in.peri' file.  For example, the file can be split into three files `in_0.peri`, 'in_1.peri', 'in_2.peri' corresponding to a partion of the full 'i' loop and executed separately by running:
     
 ```
 $ ./Run_0_LAMMPS.sh
