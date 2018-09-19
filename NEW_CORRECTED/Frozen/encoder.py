@@ -335,7 +335,8 @@ def decode(filename, ID, PREDICTION):
                     if damage == 1.0:
                         sharp_damage = damage
                     else:
-                        sharp_damage = sharpen(damage)
+                        #sharp_damage = sharpen(damage)
+                        sharp_damage = damage
                     line = str(count) + ' 1 ' + str(x) + ' ' + str(y) + ' ' + str(z) + ' ' + str(sharp_damage)
                     line_list.append(line)
                     count += 1

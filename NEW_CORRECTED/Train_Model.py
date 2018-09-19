@@ -17,6 +17,7 @@ from convolution_layers import *
 # Determine batch sizes
 #data_batches = data_count//batch_size
 data_batches = train_count//batch_size
+test_batches = test_count//batch_size
 
 # Determine total number of batches
 transformations_array = np.array(transformations)
@@ -25,6 +26,7 @@ total_batches = data_batches*transformations_count*epochs
 
 
 learn_decay_rate = 0.95
+#learn_decay_rate = 0.75
 
 
 # Define placeholders to store input batches and corresponding predictions
@@ -43,7 +45,8 @@ nodes = [10, 10, 25, 50, middle_res*middle_res*middle_channels]
 channels = [64, 32, 16, n_channels_out]
 
 # Specify Kernel/Filter Sizes
-kernels = [3, 3, 3]
+#kernels = [3, 3, 3]
+kernels = [4, 4, 4]
 
 # Convolutional Neural Network Model
 def conv_net(X):
@@ -69,6 +72,8 @@ def conv_net(X):
     Y = tf.expand_dims(Y,3)
     Y = tf.reshape(Y, [-1, middle_res, middle_res, middle_channels])
 
+    #"""
+    # ORIGINAL CODE
     # [8, 8]  -->  [16, 16]
     c_ind = 0; channel_count = channels[c_ind]
     k_ind = 0; kernel_size = kernels[k_ind]
@@ -85,17 +90,54 @@ def conv_net(X):
     channel_count = n_channels_out
     k_ind += 1; kernel_size = kernels[k_ind]
     Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, activation=None, add_bias=True, regularize=False, drop_rate=0.0, batch_norm=False,training=training)
+    #"""
 
+    """
+    # [8, 8]  -->  [16, 16]
+    base_res = 8
+    c_ind = 0; channel_count = channels[c_ind]
+    k_ind = 0; kernel_size = kernels[k_ind]
+    
+    Y = inception_v3(Y, channel_count, stride=1, training=training)
+    Y = inception_v3(Y, channel_count, stride=1, training=training)
+    
+    Y = upsample(Y, base_res*2)
+    
+    # [16, 16]  -->  [32, 32]
+    c_ind += 1; channel_count = channels[c_ind]
+    k_ind += 1; kernel_size = kernels[k_ind]
+    #Y = inception_v3(Y, channel_count, stride=1, training=training)
+    Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=1, training=training)
+    Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, training=training)
+    
+    #Y = upsample(Y, base_res*4)
+    
+    
+    # [32, 32]  -->  [64, 64]
+    channel_count = n_channels_out
+    k_ind += 1; kernel_size = kernels[k_ind]
+    #Y = inception_v3(Y, channel_count, stride=1, training=training, activation=None)
+    #Y = inception_v3(Y, channel_count, stride=1, training=training, omit_activation=True)
+    Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, activation=None, add_bias=True, regularize=False, drop_rate=0.0, batch_norm=False,training=training)
+    
+    Y = upsample(Y, base_res*8)
+    
+    if n_channels_out == 1:
+        Y = tf.reshape(Y, [-1,base_res*8,base_res*8,1])
+    """
+        
+    logits = Y
     Y = tf.nn.sigmoid(Y)
 
-    return Y
+    return Y, logits
 
 
 # Define prediction from convolutional neural network
 #pred = conv_net(x)
 with tf.name_scope('VAE_Net'):
-    pred = conv_net(x)
+    pred, logits = conv_net(x)
     pred = tf.identity(pred, name='prediction')
+    logits = tf.identity(logits, name='pred_logits')
 
 
 # Determine TensorFlow Version
@@ -133,13 +175,26 @@ with tf.name_scope('VAE_Net_Masked'):
 
 # Mean Square Cost Function
 with tf.name_scope('MS_Cost'):
-    ms_cost = tf.reduce_sum(tf.reduce_sum(tf.pow(masked_pred-masked_y, 2), axis=[1,2]))
+    #ms_cost = tf.reduce_sum(tf.reduce_sum(tf.pow(masked_pred-masked_y, 2), axis=[1,2]))
+    ms_cost = tf.reduce_mean(tf.reduce_sum(tf.pow(masked_pred-masked_y, 2), axis=[1,2]))
     #ms_cost = tf.reduce_mean(tf.reduce_mean(tf.pow(masked_pred-masked_y, 2), axis=[1,2]))
 
+# SSIM Cost Function
+with tf.name_scope('SSIM_Cost'):
+    #ssim_cost = tf.reduce_sum(tf.image.ssim(masked_pred,masked_y, max_val=1.0))
+    ssim_cost = tf.reduce_mean(tf.image.ssim(masked_pred,masked_y, max_val=1.0))
+
+# Cross Entropy Cost Function
+with tf.name_scope('Entropy_Cost'):
+    entropy_cost = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(labels=masked_y, logits=logits))
+    
 
 # Total Cost Function
 with tf.name_scope('Total_Cost'):
     cost = ms_cost
+    #cost = 0.1*ms_cost + entropy_cost
+    #cost = entropy_cost
+    #cost = ms_cost - 10.0*ssim_cost
 
 # Run Adam Optimizer to minimize cost
 with tf.name_scope('Optimizer'):
@@ -149,6 +204,8 @@ with tf.name_scope('Optimizer'):
 
 # Define summary of cost for log file
 tf.summary.scalar("MS_Loss", ms_cost)
+#tf.summary.scalar("SSIM_Loss", ssim_cost)
+tf.summary.scalar("Entropy_Loss", entropy_cost)
 tf.summary.scalar("Total_Loss", cost)
 
 
@@ -171,7 +228,8 @@ with tf.Session() as sess:
         sess.run(init)
         
     # Define writer for log file
-    writer = tf.summary.FileWriter(logdir, graph=tf.get_default_graph(), max_queue=10) 
+    writer = tf.summary.FileWriter(log_directory + "training", graph=tf.get_default_graph(), max_queue=10)
+    vwriter = tf.summary.FileWriter(log_directory + "validation", graph=tf.get_default_graph(), max_queue=10) 
 
     # Define saver for current session
     saver = tf.train.Saver(max_to_keep=3)
@@ -197,7 +255,7 @@ with tf.Session() as sess:
     saver.save(sess, checkpoint_directory + 'FINAL_MASKED', global_step=0)
         
     l_rate = learning_rate
-    
+
     for n in range(0,epochs):
         # Randomize Batches
         #data_indices = [i for i in range(1,data_count+1)]
@@ -205,12 +263,16 @@ with tf.Session() as sess:
         data_indices = train_indices
         shuffle(data_indices)
 
+        val_indices = test_indices
+        shuffle(val_indices)
+
         if (n+1) % 4 == 0:
             l_rate = learn_decay_rate*l_rate
 
         
         # Define indices to iterate through
         indices = range(1,data_batches)
+        vindices = range(1,test_batches)
         
         # Iterate through batches and transformations
         for M in indices:
@@ -265,13 +327,24 @@ with tf.Session() as sess:
                     np.save(soln_array_filename, soln_layered)
                 """    
 
-                # Save Model
-                if step % save_step == 0:
+                # Save summary
+                if step % summary_step == 0:
                     summary = sess.run(merged, feed_dict={x: batch_x, y: batch_y, template: template_array})
-                    saver.save(sess, save_file, global_step=step)
                     writer.add_summary(summary, step)
+                    writer.flush()
                     #saver.save(sess, save_file, global_step=step+current_global_step)
                     #writer.add_summary(summary, step + current_global_step)
+
+                    #vM = int(np.mod(step, np.floor(len(val_indices)//data_batch_size)))
+                    vM = vindices[int(np.mod(M,len(vindices)))]
+                    vbatch_x, vbatch_y = train_next_batch(vM, val_indices, data_batch_size, transform)                    
+                    vsummary = sess.run(merged, feed_dict={x: vbatch_x, y: vbatch_y, template: template_array})
+                    vwriter.add_summary(vsummary, step)
+                    vwriter.flush()
+                    
+                # Save Model
+                if step % save_step == 0:
+                    saver.save(sess, save_file, global_step=step)
                     
                 step += 1
                 

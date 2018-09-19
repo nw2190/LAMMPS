@@ -5,6 +5,8 @@ import time
 
 from convert_time import convert_time
 
+BATCH_SIZE = 1
+
 def load_graph(frozen_model_folder):
 
     frozen_graph_filename = frozen_model_folder + "frozen_model.pb"
@@ -93,6 +95,10 @@ if __name__ == '__main__':
         y_val = float(args.y_val)
         x_data = SCALING*np.array([[y_val,x_val]])
         y_data = np.expand_dims(template_array,0)
+
+        if BATCH_SIZE > 1:
+            x_data = np.tile(x_data, [BATCH_SIZE,1])
+            y_data = np.tile(y_data, [BATCH_SIZE,1,1,1])
         
         y_out = sess.run(y_masked, feed_dict={
             x: x_data,

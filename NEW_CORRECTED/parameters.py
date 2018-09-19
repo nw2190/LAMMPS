@@ -3,14 +3,15 @@ import numpy as np
 import csv
 import os
 
-NEW_CV_INDICES = False
+NEW_CV_INDICES = True
 
 # Set model name for saving checkpoints
 model_name = 'model'
 
 # Specify current meshes and data available
 #data_count = 2325
-data_count = 2920
+#data_count = 2920
+data_count = 3150
 
 if NEW_CV_INDICES:
     cross_validation = data_count//5
@@ -25,6 +26,7 @@ train_indices = np.concatenate( (cv_indices[0:0], cv_indices[1:5,:]) ).flatten()
 test_indices = cv_indices[0,:]
 
 train_count = cv_indices[0:4,:].size
+test_count = cv_indices[4,:].size
 
 # Specify Training Resolution
 train_resolution = 64
@@ -32,13 +34,16 @@ resolution = train_resolution
 
 # Specify current epoch number and number of epochs to run
 starting_epoch = 1
-epochs = 0
+epochs = 500
 
 # Training Parameters
-learning_rate = 0.0001
+#learning_rate = 0.0001
+learning_rate = 0.00001
+#learning_rate = 0.000025
 
 # Specify batch sizes
 data_batch_size = 1
+#data_batch_size = 4
 batch_size = data_batch_size
 
 # Specify Output Layers
@@ -65,6 +70,7 @@ n_channels_out = 1    ## Number of channels for output images
 display_step = 100
 plot_step = 100
 save_step = 1000
+summary_step = 100
 
 
 # Specify whether to train and/or test
@@ -72,7 +78,7 @@ TEST = False
 TRAIN = (not TEST)
 
 # Specify if previous checkpoint should be loaded
-LOAD_PREVIOUS = True
+LOAD_PREVIOUS = False
 
 # Specify Directories
 data_directory = './Data/'

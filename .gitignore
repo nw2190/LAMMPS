@@ -118,3 +118,10 @@ solution_dump_*
 *.case
 *.xyz
 *.damage
+
+NEW_CORRECTED/Arrays
+NEW_CORRECTED/Arrays/*
+NEW_CORRECTED/Data
+NEW_CORRECTED/Data/*
+NEW_CORRECTED/DATA.npy
+NEW_CORRECTED/TARGETS.npy

@@ -7,13 +7,20 @@ from tensorflow import layers
 
 from parameters import TRAIN, TEST, BATCH_NORM
 
-ACTIVATION = tf.nn.relu
+ACTIVATION = tf.nn.leaky_relu
 BIAS_SHIFT = 0.01
 
 WT_REG = tf.contrib.layers.l1_regularizer(0.25)
 BI_REG = tf.contrib.layers.l1_regularizer(0.25)
 #WT_REG = tf.contrib.layers.l2_regularizer(10.0)
 #BI_REG = tf.contrib.layers.l2_regularizer(10.0)
+
+
+# Define upsampling procedure
+def upsample(x, new_res):
+    y = tf.image.resize_images(x, [new_res, new_res], method=tf.image.ResizeMethod.BILINEAR)
+    #y = tf.image.resize_images(x, [1, new_res], method=tf.image.ResizeMethod.BICUBIC)
+    return y
 
 
 # Define Batch Normalization Layer
@@ -49,9 +56,11 @@ def conv2d_layer(x, n_out, kernel_size, stride=1, activation=ACTIVATION, regular
         else:
             x = batch_norm_layer(x,training,name=name, reuse=reuse)
     
-    wt_init = tf.truncated_normal_initializer(stddev=0.2)
-    bi_init = tf.truncated_normal_initializer(mean=BIAS_SHIFT,stddev=0.01)
-
+    #wt_init = tf.truncated_normal_initializer(stddev=0.2)
+    #bi_init = tf.truncated_normal_initializer(mean=BIAS_SHIFT,stddev=0.01)
+    wt_init = None
+    bi_init = None
+    
     if regularize:
         wt_reg = WT_REG
         bi_reg = BI_REG
@@ -92,8 +101,10 @@ def transpose_conv2d_layer(x, n_out, kernel_size, stride=1, activation=ACTIVATIO
         else:
             x = batch_norm_layer(x,training,name=name, reuse=reuse)
             
-    wt_init = tf.truncated_normal_initializer(stddev=0.2)
-    bi_init = tf.truncated_normal_initializer(mean=BIAS_SHIFT,stddev=0.01)
+    #wt_init = tf.truncated_normal_initializer(stddev=0.2)
+    #bi_init = tf.truncated_normal_initializer(mean=BIAS_SHIFT,stddev=0.01)
+    wt_init = None
+    bi_init = None
 
     if regularize:
         wt_reg = WT_REG
@@ -136,9 +147,11 @@ def dense_layer(x, n_out, activation=ACTIVATION, drop_rate=0.0, reuse=None, name
 
     #wt_init = tf.truncated_normal_initializer(stddev=0.15)
     #bi_init = tf.truncated_normal_initializer(mean=BIAS_SHIFT,stddev=0.25)
-    wt_init = tf.truncated_normal_initializer(stddev=0.05)
-    bi_init = tf.truncated_normal_initializer(mean=BIAS_SHIFT,stddev=0.35)
-    
+    #wt_init = tf.truncated_normal_initializer(stddev=0.05)
+    #bi_init = tf.truncated_normal_initializer(mean=BIAS_SHIFT,stddev=0.35)
+    wt_init = None
+    bi_init = None
+
     if regularize:
         wt_reg = WT_REG
         bi_reg = BI_REG
@@ -165,11 +178,13 @@ def dense_layer(x, n_out, activation=ACTIVATION, drop_rate=0.0, reuse=None, name
 
 # Defines Inception V3 Layer
 # http://arxiv.org/abs/1512.00567
-def inception_v3(x, n_out, stride=1, activation=ACTIVATION, regularize=True, drop_rate=0.0, batch_norm=BATCH_NORM, training=True, name=None, reuse=None):
+def inception_v3(x, n_out, stride=1, activation=ACTIVATION, regularize=False, drop_rate=0.0, batch_norm=BATCH_NORM, training=True, name=None, reuse=None, omit_activation=False):
 
     # Store name to use as prefix
     base_name = name
 
+    final_activation = None if omit_activation else activation
+    
     ###############################
     """  1x1 CONV  +  3x3 CONV  """
     ###############################
@@ -178,7 +193,7 @@ def inception_v3(x, n_out, stride=1, activation=ACTIVATION, regularize=True, dro
                       drop_rate=drop_rate, batch_norm=batch_norm, training=training, name=name, reuse=reuse)
 
     if name:  name = base_name + '_1b'
-    y1 = conv2d_layer(y1, n_out//4, 3, stride=stride, activation=activation, regularize=regularize,
+    y1 = conv2d_layer(y1, n_out//4, 3, stride=stride, activation=final_activation, regularize=regularize,
                       drop_rate=drop_rate, batch_norm=batch_norm, training=training, name=name, reuse=reuse)
 
     ############################################
@@ -194,7 +209,7 @@ def inception_v3(x, n_out, stride=1, activation=ACTIVATION, regularize=True, dro
                       drop_rate=drop_rate, batch_norm=batch_norm, training=training, name=name, reuse=reuse)
 
     if name:  name = base_name + '_2c'
-    y2 = conv2d_layer(y2, n_out//4, 3, stride=stride, activation=activation, regularize=regularize,
+    y2 = conv2d_layer(y2, n_out//4, 3, stride=stride, activation=final_activation, regularize=regularize,
                       drop_rate=drop_rate, batch_norm=batch_norm, training=training, name=name, reuse=reuse)
 
     ###################################
@@ -204,7 +219,7 @@ def inception_v3(x, n_out, stride=1, activation=ACTIVATION, regularize=True, dro
     y3 = layers.max_pooling2d(x, 3, stride, padding='same', data_format='channels_last')
 
     if name:  name = base_name + '_3'
-    y3 = conv2d_layer(y3, n_out//4, 1, stride=1, activation=activation, regularize=regularize,
+    y3 = conv2d_layer(y3, n_out//4, 1, stride=1, activation=final_activation, regularize=regularize,
                       drop_rate=drop_rate, batch_norm=batch_norm, training=training, name=name, reuse=reuse)
 
     ##################
@@ -212,12 +227,13 @@ def inception_v3(x, n_out, stride=1, activation=ACTIVATION, regularize=True, dro
     ##################
 
     if name:  name = base_name + '_4'
-    y4 = conv2d_layer(x, n_out//4, 1, stride=stride, activation=activation, regularize=regularize,
+    y4 = conv2d_layer(x, n_out//4, 1, stride=stride, activation=final_activation, regularize=regularize,
                       drop_rate=drop_rate, batch_norm=batch_norm, training=training, name=name, reuse=reuse)
 
     y = tf.concat([y1,y2,y3,y4],3)
 
     return y
+
 
 
 
@@ -317,8 +333,10 @@ def conv1d_layer(x, n_out, kernel_size, stride=1, activation=ACTIVATION, regular
         else:
             x = batch_norm_layer(x,training,name=name, reuse=reuse)
     
-    wt_init = tf.truncated_normal_initializer(stddev=0.2)
-    bi_init = tf.truncated_normal_initializer(mean=BIAS_SHIFT,stddev=0.01)
+    #wt_init = tf.truncated_normal_initializer(stddev=0.2)
+    #bi_init = tf.truncated_normal_initializer(mean=BIAS_SHIFT,stddev=0.01)
+    wt_init = None
+    bi_init = None
 
     if regularize:
         wt_reg = WT_REG
@@ -359,8 +377,10 @@ def transpose_conv1d_layer(x, n_out, kernel_size, stride=1, activation=ACTIVATIO
         else:
             x = batch_norm_layer(x,training,name=name, reuse=reuse)
             
-    wt_init = tf.truncated_normal_initializer(stddev=0.2)
-    bi_init = tf.truncated_normal_initializer(mean=BIAS_SHIFT,stddev=0.01)
+    #wt_init = tf.truncated_normal_initializer(stddev=0.2)
+    #bi_init = tf.truncated_normal_initializer(mean=BIAS_SHIFT,stddev=0.01)
+    wt_init = None
+    bi_init = None
 
     if regularize:
         wt_reg = WT_REG
@@ -407,8 +427,10 @@ def dense1d_layer(x, n_out, activation=ACTIVATION, regularize=True, use_bias=Tru
         else:
             x = batch_norm_layer(x,training,name=name, reuse=reuse)
             
-    wt_init = tf.truncated_normal_initializer(stddev=0.2)
-    bi_init = tf.truncated_normal_initializer(mean=BIAS_SHIFT,stddev=0.01)
+    #wt_init = tf.truncated_normal_initializer(stddev=0.2)
+    #bi_init = tf.truncated_normal_initializer(mean=BIAS_SHIFT,stddev=0.01)
+    wt_init = None
+    bi_init = None
 
     if regularize:
         wt_reg = WT_REG

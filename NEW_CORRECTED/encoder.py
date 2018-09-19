@@ -120,6 +120,10 @@ def compile_data(ID, transform):
     # Convert to NHWC format
     y_data = np.transpose(y_data, (1, 2, 0))
     """
+
+    # Correct for 0-indexing
+    ID = ID - 1
+    
     SCALING = 10e3
     x_data = SCALING*X_data[ID,:]
     y_data = Y_data[ID,:,:,:]
@@ -128,8 +132,15 @@ def compile_data(ID, transform):
 
 # Compiles batch of input/output data
 def train_next_batch(M, data_indices, d_batch_size, transform):
+
+    # Correct for 0-indexing
+    M = M - 1
+
     data = data_indices[M*d_batch_size:(M+1)*d_batch_size]
 
+    # Correct for 0-indexing
+    data = data - 1
+    
     """
     [batch_x, batch_y] = [[],[]]
     for ID in data:
@@ -137,7 +148,7 @@ def train_next_batch(M, data_indices, d_batch_size, transform):
         batch_x.append(x_data)
         batch_y.append(y_data)
     """
-    ADD_NOISE = True
+    ADD_NOISE = False
     #SCALING = 10e3
     SCALING = 1.0/0.0056417417
     batch_x = SCALING*X_data[data,:]

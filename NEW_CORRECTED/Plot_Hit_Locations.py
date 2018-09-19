@@ -53,7 +53,7 @@ test_indices = cv_indices[0,:]
 count = 0
 train_vals = np.zeros([train_indices.size,2])
 for n in train_indices:
-    val = read_data(N_START+n+1)
+    val = read_data(N_START+n)
     train_vals[count,:] = val
     count += 1
 
@@ -65,7 +65,7 @@ plt.scatter(train_vals[:,0],train_vals[:,1], s=marker_size, c='b')
 count = 0
 test_vals = np.zeros([test_indices.size,2])
 for n in test_indices:
-    val = read_data(N_START+n+1)
+    val = read_data(N_START+n)
     test_vals[count,:] = val
     count += 1
 
