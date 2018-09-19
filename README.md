@@ -18,7 +18,7 @@ $ python Convert_Data.py
 
 ### Parallelization
 
-The data generation process can be sub-divided into separate LAMMPS instances by breaking up the 'i' loop in the 'in.peri' file.  For example, the file can be split into three files `in_0.peri`, 'in_1.peri', 'in_2.peri' corresponding to a partion of the full 'i' loop and executed separately by running:
+The data generation process can be sub-divided into separate LAMMPS instances by breaking up the `i` loop in the `in.peri` file.  For example, the file can be split into three files `in_0.peri`, `in_1.peri`, `in_2.peri` corresponding to a partion of the full `i` loop and executed separately by running:
     
 ```
 $ ./Run_0_LAMMPS.sh
@@ -26,7 +26,7 @@ $ ./Run_1_LAMMPS.sh
 $ ./Run_2_LAMMPS.sh        
 ```
 
-where the starting count 'cstart' is specified in terms of the 'istart' and 'imax' values.  These starting counts can be pre-computed using the 'PERI_TEST/plot.py' file.
+where the starting count `cstart` is specified in terms of the `istart` and `imax` values.  These starting counts can be pre-computed using the `PERI_TEST/plot.py` file.
 
     
 The array files can then be created using the Python multiprocessing module via:
@@ -36,7 +36,7 @@ The array files can then be created using the Python multiprocessing module via:
 $ python Make_Arrays.py
 ```
 
-The generated training data is created in the './Data/' and './Arrays/' subdirectories.  Once the arrays have been created, the large './Data/dump_*.peri' files can be deleted; only the './Data/indenter_*.txt' files are required for training.
+The generated training data is created in the `./Data/` and `./Arrays/` subdirectories.  Once the arrays have been created, the large `./Data/dump_*.peri` files can be deleted; only the `./Data/indenter_*.txt` files are required for training.
      
     
 ## Train Model
