@@ -55,7 +55,7 @@ for n in indices:
     try:
         val = read_data(N_START+n)
         vals[count,:] = val
-    except:
+    except Exception:
         pass
     count += 1
 

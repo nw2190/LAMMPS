@@ -2,7 +2,7 @@
 TensorFlow code trained on LAMMPS peridynamics simulations
 
 
-### Generating Data
+## Generating Data
 
 ```    
 Generate Data with LAMMPS:
@@ -16,8 +16,20 @@ Convert LAMMPS data to array format:
 $ python Convert_Data.py
 ```
 
+### Parallelization
+
+The data generation process can be sub-divided into separate LAMMPS instances by breaking up the 'i' loop in the 'in.peri' file.
     
-### Train Model
+```
+./Run_0_LAMMPS.sh
+./Run_1_LAMMPS.sh
+./Run_2_LAMMPS.sh        
+```
+
+where the starting count 'cstart' is specified in terms of the 'istart' and 'imax' values.  These starting counts can be pre-computed using the 'PERI_TEST/plot.py' file.
+    
+    
+## Train Model
 
 ```
 Train TensorFlow model:
@@ -25,7 +37,7 @@ $ python Train_Model.py
 ```
 
 
-### View Results    
+## View Results    
 
 ```
 Freeze TensorFlow model:
