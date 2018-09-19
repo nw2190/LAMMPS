@@ -166,7 +166,7 @@ def train_next_batch(M, data_indices, d_batch_size, transform):
 
 
 
-def encode(ID):
+def encode(ID, verbose=True):
     ID = ID + 1
     # Specify whether or not to plot bin counts
     PLOT = False
@@ -294,7 +294,8 @@ def encode(ID):
 #    print(avg_damage.shape)
 
     # Display the number of atoms found in domain
-    print('[Dump File %d] Atoms Found: %d   Condensed Count: %d' %(ID,int(total_count), int(avg_count)))
+    if verbose:
+        print('[Dump File %d] Atoms Found: %d   Condensed Count: %d' %(ID,int(total_count), int(avg_count)))
 
 
     if PLOT:
