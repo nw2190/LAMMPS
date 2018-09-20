@@ -3,7 +3,8 @@ import csv
 import numpy as np
 
 #DATA_COUNT = 2925
-DATA_COUNT = 3150
+#DATA_COUNT = 3150
+DATA_COUNT = 25250
 
 data_X = []
 print('\nLoading Data...')

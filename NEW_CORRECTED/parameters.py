@@ -11,7 +11,13 @@ model_name = 'model'
 # Specify current meshes and data available
 #data_count = 2325
 #data_count = 2920
-data_count = 3150
+#data_count = 3150
+data_count = 25250
+
+
+# Define epoch counts for phase changes
+PHASE_1 = 20
+PHASE_2 = 40
 
 if NEW_CV_INDICES:
     cross_validation = data_count//5
@@ -34,11 +40,11 @@ resolution = train_resolution
 
 # Specify current epoch number and number of epochs to run
 starting_epoch = 1
-epochs = 500
+epochs = 75
 
 # Training Parameters
-#learning_rate = 0.0001
-learning_rate = 0.00001
+learning_rate = 0.0001
+#learning_rate = 0.00001
 #learning_rate = 0.000025
 
 # Specify batch sizes

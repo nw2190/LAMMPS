@@ -1,5 +1,6 @@
 from __future__ import division
 import multiprocessing
+import sys
 import os
 
 from encoder import *
@@ -10,7 +11,7 @@ if __name__ == '__main__':
     data_count = 25250
 
     # Only make template
-    TEMPLATE_ONLY = True
+    TEMPLATE_ONLY = False
 
     # Check that array directory exists
     array_directory = "./Arrays/"
@@ -28,7 +29,7 @@ if __name__ == '__main__':
                 encode(n, verbose=False)
         
     # Create multiprocessing pool
-    NumProcesses = 8
+    NumProcesses = 4
     pool = multiprocessing.Pool(processes=NumProcesses)
 
 

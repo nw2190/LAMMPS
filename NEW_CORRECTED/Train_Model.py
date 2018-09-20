@@ -195,11 +195,15 @@ with tf.name_scope('Total_Cost'):
     #cost = 0.1*ms_cost + entropy_cost
     #cost = entropy_cost
     #cost = ms_cost - 10.0*ssim_cost
+    cost_2 = ms_cost + 10.0*entropy_cost
+    cost_3 = ms_cost + 10.0*entropy_cost - 10.0*ssim_cost
 
 # Run Adam Optimizer to minimize cost
 with tf.name_scope('Optimizer'):
     if TRAIN:
         optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate,epsilon=1e-06).minimize(cost)
+        optimizer_2 = tf.train.AdamOptimizer(learning_rate=learning_rate,epsilon=1e-06).minimize(cost_2)
+        optimizer_3 = tf.train.AdamOptimizer(learning_rate=learning_rate,epsilon=1e-06).minimize(cost_3)
 
 
 # Define summary of cost for log file
@@ -281,8 +285,13 @@ with tf.Session() as sess:
                 batch_x, batch_y = train_next_batch(M, data_indices, data_batch_size, transform)
                 
                 # Run Optimizer and Update Weights
-                sess.run(optimizer, feed_dict={x: batch_x, y: batch_y, template: template_array, learning_rt: l_rate})
-                
+                if n < PHASE_1:
+                    sess.run(optimizer, feed_dict={x: batch_x, y: batch_y, template: template_array, learning_rt: l_rate})
+                elif n < PHASE_2:
+                    sess.run(optimizer_2, feed_dict={x: batch_x, y: batch_y, template: template_array, learning_rt: l_rate})
+                else:
+                    sess.run(optimizer_3, feed_dict={x: batch_x, y: batch_y, template: template_array, learning_rt: l_rate})
+                    
                 # Display Minibatch Loss
                 if step % display_step == 0:
                     loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y, template: template_array, learning_rt: l_rate})
