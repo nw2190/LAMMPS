@@ -34,7 +34,7 @@ $ ./Run_1_LAMMPS.sh
 $ ./Run_2_LAMMPS.sh        
 ```
 
-where the starting count `cstart` is specified in terms of the `istart` and `imax` values.  These starting counts can be pre-computed using the `PERI_TEST/plot.py` file.
+where the starting count `cstart` is specified in terms of the `istart` and `imax` values.  These starting counts can be pre-computed using the `Peri_Files/plot.py` file.
 
     
 The array files can then be created using the Python multiprocessing module via:

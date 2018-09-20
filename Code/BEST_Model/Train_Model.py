@@ -5,22 +5,14 @@ from __future__ import print_function
 import tensorflow as tf
 import numpy as np
 from random import shuffle
-from shutil import copyfile
 
 import os
 import time
-
 
 # Load 'reader.py' for converting images
 from encoder import *
 from parameters import *
 from convolution_layers import *
-
-
-# Backup configuration files
-for f in ["Train_Model.py", "parameters.py", "encoder.py", "convolution_layers.py"]:
-    copyfile(f, os.path.join(model_dir, f))
-
 
 # Determine batch sizes
 #data_batches = data_count//batch_size

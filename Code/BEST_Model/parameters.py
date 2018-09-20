@@ -14,19 +14,10 @@ model_name = 'model'
 #data_count = 3150
 data_count = 25250
 
-# Specify current epoch number and number of epochs to run
-starting_epoch = 1
-epochs = 75
-
-# Training Parameters
-#learning_rate = 0.0001
-learning_rate = 0.00005
-#learning_rate = 0.00001
-#learning_rate = 0.000025
 
 # Define epoch counts for phase changes
-PHASE_1 = 10
-PHASE_2 = 20
+PHASE_1 = 20
+PHASE_2 = 40
 
 if NEW_CV_INDICES:
     cross_validation = data_count//5
@@ -47,6 +38,14 @@ test_count = cv_indices[4,:].size
 train_resolution = 64
 resolution = train_resolution
 
+# Specify current epoch number and number of epochs to run
+starting_epoch = 1
+epochs = 75
+
+# Training Parameters
+learning_rate = 0.0001
+#learning_rate = 0.00001
+#learning_rate = 0.000025
 
 # Specify batch sizes
 data_batch_size = 1

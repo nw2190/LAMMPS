@@ -127,3 +127,5 @@ Code/DATA.npy
 Code/TARGETS.npy
 Code/Model
 Code/Model/*
+Code/BEST_Model/Checkpoints
+Code/BEST_Model/Checkpoints/*
