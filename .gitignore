@@ -119,9 +119,11 @@ solution_dump_*
 *.xyz
 *.damage
 
-NEW_CORRECTED/Arrays
-NEW_CORRECTED/Arrays/*
-NEW_CORRECTED/Data
-NEW_CORRECTED/Data/*
-NEW_CORRECTED/DATA.npy
-NEW_CORRECTED/TARGETS.npy
+Code/Arrays
+Code/Arrays/*
+Code/Data
+Code/Data/*
+Code/DATA.npy
+Code/TARGETS.npy
+Code/Model
+Code/Model/*
