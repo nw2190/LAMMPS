@@ -21,7 +21,6 @@ def load_graph(frozen_model_folder):
             input_map=None,
             return_elements=None,
             name="prefix",
-            op_dict=None,
             producer_op_list=None
         )
     return graph
@@ -46,14 +45,14 @@ def read_data(data_ID, data_directory, **keyword_parameters):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--frozen_model_folder", default="../Model/", type=str, help="Model folder to export")
+    parser.add_argument("--model_dir", default="../Model/", type=str, help="Model folder to export")
     parser.add_argument("--x_val", default="0.0", type=str, help="x-coordinate")
     parser.add_argument("--y_val", default="0.0", type=str, help="y-coordinate")
     #parser.add_argument("--frozen_model_filename", default="../Model/frozen_model_1.pb", type=str, help="Frozen model file to import")
     args = parser.parse_args()
 
     #graph = load_graph(args.frozen_model_filename)
-    graph = load_graph(args.frozen_model_folder)
+    graph = load_graph(args.model_dir)
 
     # Display operators defined in graph
     #for op in graph.get_operations():

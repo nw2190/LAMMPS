@@ -19,7 +19,6 @@ def load_graph(frozen_model_folder):
             input_map=None,
             return_elements=None,
             name="prefix",
-            op_dict=None,
             producer_op_list=None
         )
     return graph

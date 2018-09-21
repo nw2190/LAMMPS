@@ -8,6 +8,9 @@ NEW_CV_INDICES = True
 # Set model name for saving checkpoints
 model_name = 'model'
 
+# Specify network architecture
+NETWORK = 1
+
 # Specify current meshes and data available
 #data_count = 2325
 #data_count = 2920
@@ -16,17 +19,20 @@ data_count = 25250
 
 # Specify current epoch number and number of epochs to run
 starting_epoch = 1
-epochs = 75
+epochs = 100
 
 # Training Parameters
-#learning_rate = 0.0001
-learning_rate = 0.00005
+learning_rate = 0.0001
+#learning_rate = 0.00005
 #learning_rate = 0.00001
 #learning_rate = 0.000025
 
+learn_decay_rate = 0.9
+learn_decay_epochs = 0.75
+
 # Define epoch counts for phase changes
 PHASE_1 = 10
-PHASE_2 = 20
+PHASE_2 = 25
 
 if NEW_CV_INDICES:
     cross_validation = data_count//5

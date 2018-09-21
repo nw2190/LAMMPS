@@ -5,11 +5,11 @@ from __future__ import print_function
 import tensorflow as tf
 import numpy as np
 from random import shuffle
-from shutil import copyfile
+from shutil import copyfile, copytree
 
 import os
 import time
-
+import importlib
 
 # Load 'reader.py' for converting images
 from encoder import *
@@ -18,10 +18,19 @@ from convolution_layers import *
 
 
 # Backup configuration files
-for f in ["Train_Model.py", "parameters.py", "encoder.py", "convolution_layers.py"]:
+for f in ["Train_Model.py", "parameters.py", "encoder.py", "convolution_layers.py", "cv_indices.npy"]:
     copyfile(f, os.path.join(model_dir, f))
+if not os.path.exists(os.path.join(model_dir,"Networks")):
+    copytree("Networks", os.path.join(model_dir,"Networks"))
 
 
+# Load network methods from specified file
+network = importlib.import_module("Networks.network_" + str(NETWORK))
+
+# Assign network methods
+conv_net = network.conv_net
+
+    
 # Determine batch sizes
 #data_batches = data_count//batch_size
 data_batches = train_count//batch_size
@@ -33,10 +42,6 @@ transformations_count = (transformations_array.shape)[0]
 total_batches = data_batches*transformations_count*epochs
 
 
-learn_decay_rate = 0.95
-#learn_decay_rate = 0.75
-
-
 # Define placeholders to store input batches and corresponding predictions
 with tf.name_scope('Training_Data'):
     x = tf.placeholder(tf.float32, [None, n_channels_in], name='x')
@@ -45,99 +50,6 @@ with tf.name_scope('Training_Data'):
     learning_rt = tf.placeholder(tf.float32, name='learning_rt')
     
 
-# Specify Intermediate Channel Sizes and Node Counts
-#nodes = [16, 32, 16*16*resolution]
-middle_channels = 64
-middle_res = 8
-nodes = [10, 10, 25, 50, middle_res*middle_res*middle_channels]
-channels = [64, 32, 16, n_channels_out]
-
-# Specify Kernel/Filter Sizes
-#kernels = [3, 3, 3]
-kernels = [4, 4, 4]
-
-# Convolutional Neural Network Model
-def conv_net(X):
-    training = True
-    
-    n_ind = 0; node_count = nodes[n_ind]
-    Y = dense_layer(X, node_count, training=training)
-
-    n_ind += 1; node_count = nodes[n_ind]
-    Y = dense_layer(Y, node_count, training=training)
-
-    n_ind += 1; node_count = nodes[n_ind]
-    Y = dense_layer(Y, node_count, training=training)
-
-    n_ind += 1; node_count = nodes[n_ind]
-    Y = dense_layer(Y, node_count, training=training)
-
-    n_ind += 1; node_count = nodes[n_ind]
-    Y = dense_layer(Y, node_count, training=training)
-
-    # Reshape:  [None, 8, 8, C]
-    Y = tf.expand_dims(Y,2)
-    Y = tf.expand_dims(Y,3)
-    Y = tf.reshape(Y, [-1, middle_res, middle_res, middle_channels])
-
-    #"""
-    # ORIGINAL CODE
-    # [8, 8]  -->  [16, 16]
-    c_ind = 0; channel_count = channels[c_ind]
-    k_ind = 0; kernel_size = kernels[k_ind]
-    #Y = transpose_inception_v3(Y, channel_count, stride=1, training=training)
-    Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=1, training=training)
-    Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, training=training)
-
-    # [16, 16]  -->  [32, 32]
-    c_ind += 1; channel_count = channels[c_ind]
-    k_ind += 1; kernel_size = kernels[k_ind]
-    Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, training=training)
-
-    # [32, 32]  -->  [64, 64]
-    channel_count = n_channels_out
-    k_ind += 1; kernel_size = kernels[k_ind]
-    Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, activation=None, add_bias=True, regularize=False, drop_rate=0.0, batch_norm=False,training=training)
-    #"""
-
-    """
-    # [8, 8]  -->  [16, 16]
-    base_res = 8
-    c_ind = 0; channel_count = channels[c_ind]
-    k_ind = 0; kernel_size = kernels[k_ind]
-    
-    Y = inception_v3(Y, channel_count, stride=1, training=training)
-    Y = inception_v3(Y, channel_count, stride=1, training=training)
-    
-    Y = upsample(Y, base_res*2)
-    
-    # [16, 16]  -->  [32, 32]
-    c_ind += 1; channel_count = channels[c_ind]
-    k_ind += 1; kernel_size = kernels[k_ind]
-    #Y = inception_v3(Y, channel_count, stride=1, training=training)
-    Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=1, training=training)
-    Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, training=training)
-    
-    #Y = upsample(Y, base_res*4)
-    
-    
-    # [32, 32]  -->  [64, 64]
-    channel_count = n_channels_out
-    k_ind += 1; kernel_size = kernels[k_ind]
-    #Y = inception_v3(Y, channel_count, stride=1, training=training, activation=None)
-    #Y = inception_v3(Y, channel_count, stride=1, training=training, omit_activation=True)
-    Y = transpose_conv2d_layer(Y, channel_count, kernel_size, stride=2, activation=None, add_bias=True, regularize=False, drop_rate=0.0, batch_norm=False,training=training)
-    
-    Y = upsample(Y, base_res*8)
-    
-    if n_channels_out == 1:
-        Y = tf.reshape(Y, [-1,base_res*8,base_res*8,1])
-    """
-        
-    logits = Y
-    Y = tf.nn.sigmoid(Y)
-
-    return Y, logits
 
 
 # Define prediction from convolutional neural network
@@ -278,7 +190,7 @@ with tf.Session() as sess:
         val_indices = test_indices
         shuffle(val_indices)
 
-        if (n+1) % 4 == 0:
+        if (n+1) % learn_decay_epochs == 0:
             l_rate = learn_decay_rate*l_rate
 
         

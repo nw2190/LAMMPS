@@ -33,7 +33,8 @@ def read_data(ID, **keyword_parameters):
     #template_file = array_directory + 'template.npy'
     #template = np.load(template_file)
 
-    SCALING = 10e3
+    #SCALING = 10e3
+    SCALING = 1.0/0.0056417417
     
     # Define filenames
     input_filename = data_directory + 'indenter_' + str(ID) +'.txt'

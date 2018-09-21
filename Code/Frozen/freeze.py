@@ -57,7 +57,7 @@ def freeze_graph(model_folder):
             
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_folder", default="../Model/", type=str, help="Model folder to export")
+    parser.add_argument("--model_dir", default="../Model/", type=str, help="Model folder to export")
     args = parser.parse_args()
     
-    freeze_graph(args.model_folder)
+    freeze_graph(args.model_dir)
