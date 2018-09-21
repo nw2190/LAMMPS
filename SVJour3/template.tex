@@ -220,6 +220,8 @@ In this study, data obtained from peridynamics is used to predict the forward an
 \subsection{Dataset creation for forward problem}
 \label{forward_data}
 
+The dataset for the forward problem has been created using the LAMPPS software's peridynamics package.  Simulations corresponding to  25,250 indenter hit locations were carried out to construct the final dataset.  To avoid the introduction of potentially unrealistic artifacts into the dataset, due to issues with the peridynamics simulations near the boundary, the selected hitting locations have been restricted to the inner $1/3$ of the disk.
+
 In order to successfully train the network for the forward problem, it was necessary to design a loss function which converted the raw LAMMPS damage data into a format which is compatible with the deep learning framework and array/tensor-based format of the TensorFlow network implementation.  This conversion was performed most naturally by bucketizing the atoms into a uniform grid of resolution $64 \times 64$.  The average damage of the atoms contained in each bucket/bin of the grid was calculated and used to create the target outputs for the network.  It was also necessary to account for atoms which had been substantially dislocated by a direct impact with the indenter and had left some bins at the disk’s interior empty.  These interior bins were assigned a full damage value of $1.0$ to indicate that the atom which had originally occupied the space was displaced by the indenter.  This was achieved by storing a copy of the LAMMPS data before the indenter strikes to serve as a template which indicates where the atom damages should be calculated.
 
 
@@ -255,7 +257,7 @@ All network layers used ReLU activation functions except for the final layer; as
 \operatorname{sigmoid}(x) \, \, = \, \, \frac{1}{1 \, + \, \exp(-x)}
 \]
 
-The model was trained using the standard ADAM optimization algorithm and backpropogation as implemented in TensorFlow.  The learning rate for the ADAM optimizer was set to 0.0001, and the model was trained for 100 epochs using 10,000 data points.  
+The model was trained using the standard ADAM optimization algorithm and backpropogation as implemented in TensorFlow.  The learning rate for the ADAM optimizer was initialized to 0.0001 with a geometric decay rate of 0.9 applied every 3 epochs.  The model was trained for 100 epochs using 20,200 training data points, with the remaining 5,050 data points reserved for testing/validation.  
 
 
 
@@ -271,8 +273,21 @@ The model was trained using the standard ADAM optimization algorithm and backpro
 \end{figure}
 
 
+\begin{figure}
+  \centering
+  \begin{tabular}{c|c|c|c}
+    Dataset  &  Avg. Computation Time  & Avg. MSE &  Avg. $L^1$ Error \\ \hline
+    Training &    0.002253 s &    0.010207  &   0.054351  \\ 
+    Testing  &    0.002273 s &    0.010316  &   0.054664  
+  \end{tabular}
+  \caption{Average computation times, MSE, and $L^1$ errors for the forward problem model.}
+  \label{fig:forward_results_table}
+\end{figure}
 
-After training, the neural network's damage predictions are seen to closely approximate the true damage patterns from the LAMMPS simulations.  As depicted in Fig.~\ref{fig:forward_results}, we see that the overall pattern of the damage on the disk is predicted quite well, however many of the finer details have been deemphasized or smoothed out by the network.  The network predictions also tend to be more symmetric than the simulated patterns, and tend to produce more linear cracking branches in contrast to the more jagged cracks from the simulations.
+
+After training, the neural network's damage predictions are seen to closely approximate the true damage patterns from the LAMMPS simulations.  The offline training procedure required just under 7 hours to complete using 4 CPUs; once completed, network predictions for damage patterns can be computed in less than $0.0025$ seconds with average MSE and $L^1$ errors in the range of $0.01$ and $0.05$, respectively (see Fig.~\ref{fig:forward_results_table}).  Of note is the fact that a single LAMMPS simulation for the specified problem setup required an average of $6$ seconds to complete on the same machine;  the trained network is thus seen to  provide approximations to the true simulation results while reducing the computation time  by a factor of over $2000$.
+
+As depicted in Fig.~\ref{fig:forward_results}, we see that the overall pattern of the damage on the disk is predicted quite well, however many of the finer details have been deemphasized or smoothed out by the network.  The network predictions also tend to be more symmetric than the simulated patterns, and tend to produce more linear cracking branches in contrast to the more jagged cracks from the simulations.
 
 
 \begin{figure}
@@ -377,7 +392,7 @@ Matconvnet \cite{Ref19} based on MATLAB code was applied to the inverse problem 
 \caption{Structure of data in the .mat file}
 \label{fig:4}       
 \end{figure}
-The training data set and the test data set are made into a .mat file that can be applied to Matconvnet and its structure is shown in Fig. 4. The structure of the data in the .mat file is largely divided into $'$Images$'$ and $'$Meta$'$. There are $'$Labels$'$, $'$Set$'$ and $'$Data$'$ classes in the $'$Images$'$ class. $'$Labels$'$ displays labels on images of input data sets. Labels were displayed randomly from 1 to 8 since data has 8modes. In the set class, training data, test data, and validation data are indicated by 1, 2, and 3, respectively. In the $'$Data$'$ class, the data obtained from the LAMMPS is converted to a numpy array and expresses it as a 4-D single matrix. Finally, there are $'$Set$'$ and $'$Classes$'$ in the $'$Meta$'$ class. The $'$Set$'$ contains the words $'$train$'$, $'$test$'$ and $'$val$'$ which are related to the $'$Images$'$ class and indicate that the 1 2 3 in the set of images class is training data, test data and validation data respectively. The $'$Classes$'$ in the $'$Meta$'$ specifies a class from 1 to 8 due to this inverse problem has a mode of 8.
+The training data set and the test data set are made into a .mat file that can be applied to Matconvnet and its structure is shown in Fig. 4. The structure of the data in the .mat file is largely divided into `Images' and $'$Meta$'$. There are $'$Labels$'$, $'$Set$'$ and $'$Data$'$ classes in the $'$Images$'$ class. $'$Labels$'$ displays labels on images of input data sets. Labels were displayed randomly from 1 to 8 since data has 8modes. In the set class, training data, test data, and validation data are indicated by 1, 2, and 3, respectively. In the $'$Data$'$ class, the data obtained from the LAMMPS is converted to a numpy array and expresses it as a 4-D single matrix. Finally, there are $'$Set$'$ and $'$Classes$'$ in the $'$Meta$'$ class. The $'$Set$'$ contains the words $'$train$'$, $'$test$'$ and $'$val$'$ which are related to the $'$Images$'$ class and indicate that the 1 2 3 in the set of images class is training data, test data and validation data respectively. The $'$Classes$'$ in the $'$Meta$'$ specifies a class from 1 to 8 due to this inverse problem has a mode of 8.
 \begin{figure}
 \includegraphics[width=12cm,height=5cm]{figure/cnn.eps}
 \caption{Architecture of convolution neural networks (CNNs) for inverse problem and rectification (ReLU) and downsampling layers (MaxPooling) represented in section 4.1.4. This figure shows the data size, kernel size and the numbers of the output feature and produced by each filter layers.}
@@ -600,18 +615,18 @@ S. Kotsiantis, “Supervised learning: A review of classification techniques,”
 \bibitem{Ref19}
 Vedaldi, Andrea, and Karel Lenc. "MatConvNet - Convolutional Neural Networks for MATLAB." (2014). Web.
 \bibitem{Ref20}
-Goodfellow, I., Bengio, Y., Courville, A., & Bengio, Y. (2016). Deep learning (Vol. 1). Cambridge: MIT press.
+Goodfellow, I., Bengio, Y., Courville, A., \& Bengio, Y. (2016). Deep learning (Vol. 1). Cambridge: MIT press.
 
 \bibitem{Ref21}
 Géron, A. (2017). Hands-on machine learning with Scikit-Learn and TensorFlow: concepts, tools, and techniques to build intelligent systems. " O'Reilly Media, Inc.".
 \bibitem{Ref22}
 LeCun, Y., Bengio, Y., & Hinton, G. (2015). Deep learning. nature, 521(7553), 436.
 \bibitem{Ref23}
-Krizhevsky, A., Sutskever, I., & Hinton, G. E. (2012). Imagenet classification with deep convolutional neural networks. In Advances in neural information processing systems (pp. 1097-1105).
+Krizhevsky, A., Sutskever, I., \& Hinton, G. E. (2012). Imagenet classification with deep convolutional neural networks. In Advances in neural information processing systems (pp. 1097-1105).
 \bibitem{Ref24}
 Riesenhuber, M., & Poggio, T. (1999). Hierarchical models of object recognition in cortex. Nature neuroscience, 2(11), 1019.
 \bibitem{Ref25}
-Krizhevsky, A., Sutskever, I., & Hinton, G. E. (2012). Imagenet classification with deep convolutional neural networks. In Advances in neural information processing systems (pp. 1097-1105).
+Krizhevsky, A., Sutskever, I., \& Hinton, G. E. (2012). Imagenet classification with deep convolutional neural networks. In Advances in neural information processing systems (pp. 1097-1105).
 \bibitem{Ref26}
 Nasrabadi, N. M. (2007). Pattern recognition and machine learning. Journal of electronic imaging, 16(4), 049901.
 

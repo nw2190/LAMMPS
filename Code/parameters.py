@@ -28,7 +28,7 @@ learning_rate = 0.0001
 #learning_rate = 0.000025
 
 learn_decay_rate = 0.9
-learn_decay_epochs = 0.75
+learn_decay_epochs = 3
 
 # Define epoch counts for phase changes
 PHASE_1 = 10
