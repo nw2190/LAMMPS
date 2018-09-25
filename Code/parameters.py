@@ -11,6 +11,9 @@ model_name = 'model'
 # Specify network architecture
 NETWORK = 1
 
+# Specify AMSGrad vs. Adam
+use_AMSGrad = True
+
 # Specify current meshes and data available
 #data_count = 2325
 #data_count = 2920

@@ -16,6 +16,8 @@ from encoder import *
 from parameters import *
 from convolution_layers import *
 
+# Load AMSGrad optimizer
+from AMSGrad import AMSGrad
 
 # Backup configuration files
 for f in ["Train_Model.py", "parameters.py", "encoder.py", "convolution_layers.py", "cv_indices.npy"]:
@@ -120,10 +122,15 @@ with tf.name_scope('Total_Cost'):
 
 # Run Adam Optimizer to minimize cost
 with tf.name_scope('Optimizer'):
-    if TRAIN:
+    if use_AMSGrad:
+        optimizer = AMSGrad(learning_rate=learning_rate,epsilon=1e-06).minimize(cost)
+        optimizer_2 = AMSGrad(learning_rate=learning_rate,epsilon=1e-06).minimize(cost_2)
+        optimizer_3 = AMSGrad(learning_rate=learning_rate,epsilon=1e-06).minimize(cost_3)
+    else:
         optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate,epsilon=1e-06).minimize(cost)
         optimizer_2 = tf.train.AdamOptimizer(learning_rate=learning_rate,epsilon=1e-06).minimize(cost_2)
         optimizer_3 = tf.train.AdamOptimizer(learning_rate=learning_rate,epsilon=1e-06).minimize(cost_3)
+
 
 
 # Define summary of cost for log file
