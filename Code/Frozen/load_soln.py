@@ -43,7 +43,7 @@ if __name__ == '__main__':
     data = np.array(indenter_data, dtype=np.float32)
     # Only use x,y coordinates
     data = data[0:2]
-    print('\nPlotting Solution for:   (x,y)  = %f %f\n' %(data[1],data[0]))
+    #print('\nPlotting Solution for:   (x,y)  = %f %f\n' %(data[1],data[0]))
 
     
     graph = load_graph(args.frozen_model_folder)
@@ -97,7 +97,11 @@ if __name__ == '__main__':
             
         np.save('y_true_out',soln_layered)
             
-    print('\n')
+    #print('\n')
+
+
+    ## RETURN COORDINATES TO SHELL
+    print('%f %f' %(data[1],data[0]))
 
 
     #soln = np.load('../Arrays/avg_damage_'+str(ID)+'.npy')

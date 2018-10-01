@@ -266,8 +266,10 @@ The model was trained using the standard ADAM optimization algorithm and backpro
 
 \begin{figure}
   \centering
-  \includegraphics[scale=0.25]{figure/true_soln_2300.eps}
-  \includegraphics[scale=0.25]{figure/prediction_2300.eps}
+  %\includegraphics[scale=0.25]{figure/true_soln_2300.eps}
+  %\includegraphics[scale=0.25]{figure/prediction_2300.eps}
+  \includegraphics[scale=1.1]{figure/New_Solutions/soln_19050.eps}
+  \includegraphics[scale=1.1]{figure/New_Solutions/pred_19050.eps}
 \caption{Example of a true damage pattern computed using LAMMPS (left) along with the corresponding neural network prediction (right).}
 \label{fig:forward_results}       
 \end{figure}
@@ -277,15 +279,17 @@ The model was trained using the standard ADAM optimization algorithm and backpro
   \centering
   \begin{tabular}{c|c|c|c}
     Dataset  &  Avg. Computation Time  & Avg. MSE &  Avg. $L^1$ Error \\ \hline
-    Training &    0.002253 s &    0.010207  &   0.054351  \\ 
-    Testing  &    0.002273 s &    0.010316  &   0.054664  
+    %Training &    0.002253 s &    0.010207  &   0.054351  \\ 
+    %Testing  &    0.002273 s &    0.010316  &   0.054664
+    Training &    0.003973 s &    0.010214  &   0.054590  \\ 
+    Testing  &    0.003970 s &    0.010298  &   0.054779  
   \end{tabular}
   \caption{Average computation times, MSE, and $L^1$ errors for the forward problem model.}
   \label{fig:forward_results_table}
 \end{table}
 
 
-After training, the neural network's damage predictions are seen to closely approximate the true damage patterns from the LAMMPS simulations.  The offline training procedure required just under 7 hours to complete using 4 CPUs; once completed, network predictions for damage patterns can be computed in less than $0.0025$ seconds with average MSE and $L^1$ errors in the range of $0.01$ and $0.05$, respectively (see Table~\ref{fig:forward_results_table}).  Of note is the fact that a single LAMMPS simulation for the specified problem setup required an average of $6$ seconds to complete on the same machine;  the trained network is thus seen to  provide approximations to the true simulation results while reducing the computation time  by a factor of over $2000$.
+After training, the neural network's damage predictions are seen to closely approximate the true damage patterns from the LAMMPS simulations.  The offline training procedure required just under 7 hours to complete using 4 CPUs; once completed, network predictions for damage patterns can be computed in less than $0.0025$ seconds with average MSE and $L^1$ errors in the range of $0.01$ and $0.05$, respectively (see Table~\ref{fig:forward_results_table}).  Of note is the fact that a single LAMMPS simulation for the specified problem setup required an average of $6$ seconds to complete on the same machine;  the trained network is thus seen to  provide approximations to the true simulation results while reducing the computation time  by a factor of over $1500$.
 
 
 
@@ -293,17 +297,26 @@ After training, the neural network's damage predictions are seen to closely appr
 \begin{figure}
   \centering
   \begin{tabular}{ccc}
-  \includegraphics[scale=0.3]{figure/Solutions/solution_200.eps} &
-  \includegraphics[scale=0.3]{figure/Solutions/solution_201.eps} &
-  \includegraphics[scale=0.3]{figure/Solutions/solution_202.eps} \\
-  \includegraphics[scale=0.3]{figure/Solutions/solution_2000.eps} &
-  \includegraphics[scale=0.3]{figure/Solutions/solution_2001.eps} &
-  \includegraphics[scale=0.3]{figure/Solutions/solution_2002.eps} 
+  %\includegraphics[scale=0.3]{figure/Solutions/solution_200.eps} &
+  %\includegraphics[scale=0.3]{figure/Solutions/solution_201.eps} &
+  %\includegraphics[scale=0.3]{figure/Solutions/solution_202.eps} \\
+  %\includegraphics[scale=0.3]{figure/Solutions/solution_2000.eps} &
+  %\includegraphics[scale=0.3]{figure/Solutions/solution_2001.eps} &
+  %\includegraphics[scale=0.3]{figure/Solutions/solution_2002.eps}
+  \includegraphics[scale=0.75]{figure/New_Solutions/true_soln_1510.eps} &
+  \includegraphics[scale=0.75]{figure/New_Solutions/true_soln_1511.eps} &
+  \includegraphics[scale=0.75]{figure/New_Solutions/true_soln_1512.eps} \\
+  \includegraphics[scale=0.75]{figure/New_Solutions/true_soln_19049.eps} &
+  \includegraphics[scale=0.75]{figure/New_Solutions/true_soln_19050.eps} &
+  \includegraphics[scale=0.75]{figure/New_Solutions/true_soln_19051.eps} 
   \end{tabular}
   \begin{tabular}{lcclc}
-  Top-Left:   &  (0.001139, -0.003129) & & Bottom-Left:   & (-0.010100, 0.002305) \\
-  Top-Center: &  (0.000692, -0.003257) & & Bottom-Center: & (-0.009987, 0.002756) \\
-  Top-Right:  &  (0.000232, -0.003322) & & Bottom-Right:  & (-0.009853, 0.003201) \\
+  %Top-Left:   &  (0.001139, -0.003129) & & Bottom-Left:   & (-0.010100, 0.002305) \\
+  %Top-Center: &  (0.000692, -0.003257) & & Bottom-Center: & (-0.009987, 0.002756) \\
+  %Top-Right:  &  (0.000232, -0.003322) & & Bottom-Right:  & (-0.009853, 0.003201) \\
+  Top-Left:   &  (0.001471, 0.002675) & & Bottom-Left:   & (-0.010236, 0.002842) \\
+  Top-Center: &  (0.001603, 0.002598) & & Bottom-Center: & (-0.010193, 0.002989) \\
+  Top-Right:  &  (0.001732, 0.002514) & & Bottom-Right:  & (-0.010275, 0.002694) \\
   \end{tabular}
 \caption{Demonstration of low forward stability of true damage patterns for LAMMPS simulations.  A cluster of neighboring hit locations near the center of the disk (top row) as well as a cluster further from the center (bottom row) both produce a widely varied collection of simulated damage patterns (coordinates of each hit location are shown below the figures).}
 \label{fig:forward_solutions}       
@@ -315,7 +328,7 @@ As depicted in Fig.~\ref{fig:forward_results}, we see that the overall pattern o
 The reason why the predictions are overly symmetric is most likely due to the relatively low forward stability of the LAMMPS peridynamics simulations.  That is to say that the damage patterns are observed to change significantly even when the hit location of the indenter is changed by a very small amount.  For example, the patters shown in Fig.~\ref{fig:forward_solutions} correspond to hit locations which are very close to one another near the center of the disk along with a cluster of hit locations further from the center.
 %%
 
-Each of these clusters have a maximum distance of less than $0.00093$mm on a disk of radius $0.037$mm (i.e. less than $2.5\%$ of the radius), yet the simulated damage patterns are seen to be quite disparate.  It is suspected that the smoother, more symmetric neural network predictions illustrated in Fig.~\ref{fig:forward_results} may be reflective of the average damage incurred when the indenter's hit location is varied over a small neighborhood of the precise location provided to the network as input.
+Each of these clusters have a maximum distance of less than $0.00031$mm on a disk of radius $0.037$mm (i.e. less than $0.85\%$ of the radius), yet the simulated damage patterns are seen to be quite disparate.  It is suspected that the smoother, more symmetric neural network predictions illustrated in Fig.~\ref{fig:forward_results} may be reflective of the average damage incurred when the indenter's hit location is varied over a small neighborhood of the precise location provided to the network as input.
 
 
 
@@ -491,7 +504,7 @@ The prediction results of inverse problem using the training data showed a succe
 \label{sec:5}
 
 
-We have used the peridynamic-based MD simulation to change the hit locations of the disk, impacting the disk and forming distinct crack pattern. Based on the crack pattern data obtained from MD simulation, both the forward problem and inverse problem were approximated by convolutional neural networks.  The results for the forward problem were shown to provide accurate predicted damage patterns both quantitatively and qualitatively.  Though the patterns predicted by the network tend to be more symmetric and smooth in comparison with the MD simulation results, it has been seen that this is likely a reflection of low forward-stability in the fine details of the crack patterns for the forward problem.  Although the predictions omit some small-scale features in the crack patterns, the overall structure of the cracks is shown to be predicted accurately and in a fraction of the time required by direct MD simulations (with network predictions computed over $2,000$ times faster).
+We have used the peridynamic-based MD simulation to change the hit locations of the disk, impacting the disk and forming distinct crack pattern. Based on the crack pattern data obtained from MD simulation, both the forward problem and inverse problem were approximated by convolutional neural networks.  The results for the forward problem were shown to provide accurate predicted damage patterns both quantitatively and qualitatively.  Though the patterns predicted by the network tend to be more symmetric and smooth in comparison with the MD simulation results, it has been seen that this is likely a reflection of low forward-stability in the fine details of the crack patterns for the forward problem.  Although the predictions omit some small-scale features in the crack patterns, the overall structure of the cracks is shown to be predicted accurately and in a fraction of the time required by direct MD simulations (with network predictions computed over $1,500$ times faster).
 
 For the inverse problem, we used the data of the crack pattern obtained by changing the radius, velocity, angle of the indenter, and the hitting position of the disk. In order to predict the mode, we labeled the data and predict the data by CNN and accurately predict the most cases from MODE1 to MODE8. By implementing CNN on the Inverse problem, we have shown the ability to identify the MODE through a learning process that extracts related functions from the raw images through the convolution layer, maxpooling layer, and ReLU layer in the feature extraction. Using these functions, data could be divided into MODE1 to MODE8 through fully connected layer. The confidence level of the classification can be confirmed from the class probability vector generated by the softmax layer existing in the feature classification. 
 
