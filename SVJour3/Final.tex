@@ -145,16 +145,16 @@ Therefore, in order to compensate for these drawbacks, we conducted a crack patt
 %%
 The peridynamics theory of solid mechanics was first introduced by S. Silling \cite{Ref1,Ref2,Ref3,Ref4}.
 %%
-This theory is a nonlocal extension of classical continuum mechanics and it is an alternative to continuum mechanics for more accurate crack studies.
+This theory is a nonlocal extension of classical continuum mechanics and provides an alternative to continuum mechanics for more accurate crack studies.
 %%
-This model is based on the integral equations, which can be applied directly to cracks with the advantage of not requiring to compute partial derivatives.
+This model is based on integral equations, which can be applied directly to cracks with the advantage of not requiring to compute partial derivatives.
 %%
-Therefore, the peridynamics is very suitable for the study of surface discontinuity such as cracks, and
+Therefore, the peridynamics is very suitable for the study of surface discontinuities such as cracks, and
 {\rd{various multiscale modeling is possible due to SI units can be used.}}
 %%
-The peridynamics can be of particular use in understanding the damage in membranes and nanofiber \cite{Ref5}, composites and brittle materials \cite{Ref6}, brazed single-lap joints \cite{Ref7}, fuel pellet \cite{Ref8} and biomembranes \cite{Ref9}.
+Peridynamics can be of particular use in understanding the damage in membranes and nanofiber \cite{Ref5}, composites and brittle materials \cite{Ref6}, brazed single-lap joints \cite{Ref7}, fuel pellet \cite{Ref8} and biomembranes \cite{Ref9}.
 %%
-The peridynamics can be applied not only to damage studies, but also to technologically important areas such as prediction of viscoelastic materials \cite{Ref10}, piezo-resistive response of carbon nanotube nanocomposites \cite{Ref11}, phase transformation in zirconium dioxide \cite{Ref12}, shock and vibration \cite{Ref13}, and indentation of thin copper film \cite{Ref14}.
+Peridynamics can be applied not only to damage studies, but also to technologically important areas such as prediction of viscoelastic materials \cite{Ref10}, piezo-resistive response of carbon nanotube nanocomposites \cite{Ref11}, phase transformation in zirconium dioxide \cite{Ref12}, shock and vibration \cite{Ref13}, and indentation of thin copper film \cite{Ref14}.
 %%
 Though the peridynamics framework has proven to be a powerful and widely applicable tool, the computational demand can become burdensome very quickly as the scales of the simulations are increased.
 %%
@@ -179,13 +179,37 @@ By combining the accuracy of the peridynamics model with the computational speed
 \label{fig:1}       % Give a unique label
 \end{figure}
 
-The peridynamics is the non-local extension of the classical continuum mechanics. The model structure of peridynamics is the same as an MD model and in LAMMPS, SI units (m, kg, sec etc.) can be used for simulation.
+Peridynamics is the non-local extension of the classical continuum mechanics. The model structure of peridynamics is the same as an MD model and in LAMMPS, SI units (m, kg, sec etc.) can be used for simulations.
 {\rd{Compared with FEM (Finite Element Method), FEM can only acquire approximate solutions and contain inherent errors due to $\pi$, $\sqrt{N}$, etc. The user's mistake in obtaining a solution can be incredibly deadly, and the results can vary depending on how the mesh is set.}}
 %%
-Finally, the FEM is based on partial differential equations, but there are no partial derivatives on crack surfaces. Therefore, to secure this weakness, the peridynamics model is used. The peridynamics model is based on integral equations. In the analysis of damage and cracks, the integral equations of the peridynamics theory can be applied directly, because they do not require partial derivatives. Accordingly, it overcomes deficiencies in the modeling of deformation discontinuities. Next, let's look at the governing equations of the peridynamics model \cite{Ref2,Ref3,Ref4}. Fig. 1 is plotted to represent the composition of the peridynamics model. As you can see in the Fig. 1, $\mathcal{F}_x$ (Family of $x$) exists in the body, and there are arbitrary points $x$ and ${x'}$ in it. $x$ and ${x'}$ are the points given in the reference configuration. $u$($x$,$t$) and $y$($x$,$t$) represent the displacement and position of the point $x$ at time $t$ respectively. In peridynamics theory, all points, including $x$ and ${x'}$ in the horizon $\delta$ boundary, are interconnected by bonds. That is, each point has connectivity to all points in horizon $\delta$ as well as nearby neighbors. Thus, as mentioned above, the peridynamics is a non-local extension of the classical continuum mechanics. The integral equation is used to calculate the current point forces per unit volume. Due to spatial differentiation is not used in peridynamics, it is useful for analyzing discontinuous media and discrete particles such as cracks or damage. The peridynamic equation of motion is given as :
+%Finally,
+The FEM approach is based on partial differential equations, but these partial derivatives do not exist on crack surfaces.
+%%
+However, a peridynamics model can be used to overcome this difficulty.
+%%
+The peridynamics model is based on integral equations.
+%%
+In the analysis of damage and cracks, the integral equations of the peridynamics theory can be applied directly, because they do not require partial derivatives.
+%%
+Accordingly, it overcomes deficiencies in the modeling of deformation discontinuities.
+%%
+Next, let's look at the governing equations of the peridynamics model \cite{Ref2,Ref3,Ref4}.
+%%
+Fig. 1 is plotted to represent the composition of the peridynamics model.
+%%
+As you can see in the Fig. 1, $\mathcal{F}_x$ (Family of $x$) exists in the body, and there are arbitrary points $x$ and ${x'}$ in it. %%
+$x$ and ${x'}$ are the points given in the reference configuration. $u$($x$,$t$) and $y$($x$,$t$) represent the displacement and position of the point $x$ at time $t$ respectively. In peridynamics theory, all points, including $x$ and ${x'}$ in the horizon $\delta$ boundary, are interconnected by bonds.
+%%
+That is, each point has connectivity to all points in horizon $\delta$ as well as nearby neighbors. Thus, as mentioned above, the peridynamics is a non-local extension of the classical continuum mechanics.
+%%
+The integral equation is used to calculate the current point forces per unit volume.
+%%
+Due to spatial differentiation is not used in peridynamics, it is useful for analyzing discontinuous media and discrete particles such as cracks or damage.
+%%
+{\rd{The peridynamic equation of motion is given as :}}
 
 
- $\rho(x)$ is the density in the reference configuration, $F_x$ is the family of $x$ in the horizon $\delta$, $b$ represents the external force per unit volume and $u$ represent the displacement of the point $x$ at time $t$. $\omega$ is the pairwise bond force density that includes all of the information related to $x$ and ${x'}$. Next, the relative position vector which is time-independent and displacement vector which is time-dependent of two bonded points $x$ and ${x'}$ are defined by $\zeta$ = ${x'}$ - $x$ and $\eta$ = $u$(${x'}$,$t$) - $u$($x$,$t$), respectively. $\zeta$ + $\eta$ represents the current relative position vector between the particles. The pairwise bond force density $\omega$ should have the following properties: 
+where $\rho(x)$ is the density in the reference configuration, $F_x$ is the family of $x$ in the horizon $\delta$, $b$ represents the external force per unit volume and $u$ represent the displacement of the point $x$ at time $t$. $\omega$ is the pairwise bond force density that includes all of the information related to $x$ and ${x'}$. Next, the relative position vector which is time-independent and displacement vector which is time-dependent of two bonded points $x$ and ${x'}$ are defined by $\zeta$ = ${x'}$ - $x$ and $\eta$ = $u$(${x'}$,$t$) - $u$($x$,$t$), respectively. $\zeta$ + $\eta$ represents the current relative position vector between the particles. The pairwise bond force density $\omega$ should have the following properties: 
 %eq1 
 \begin{equation}
 \rho(x)\ddot{u}(x,t)=\int_{\mathcal{F}_x} \omega(u(x',t)-u(x,t),x'-x)dV_{x'}+b(x,t), \quad t\geq0
@@ -198,14 +222,14 @@ Finally, the FEM is based on partial differential equations, but there are no pa
 
 
 
-$\omega$($-\eta$,$-\zeta$)= $-\omega$($\eta$, $\zeta$) represents the conservation of linear momentum, and ($\zeta$ + $\eta$)\times$\omega$($\eta$, $\zeta$)=0 indicates the conservation of angular momentum. It means that the force vector between $x$ and ${x'}$ is parallel to their current relative position vector. In this study, the crack pattern generated by impact of the indenter on disk is used as input data of machine learning algorithm. Therefore, Prototype Microelastic Brittle (PMB) model \cite{Ref4} was used for the constitutive model to obtain a more precise and complex crack pattern. The governing equations are given as: 
+\noindent where $\omega$($-\eta$,$-\zeta$)= $-\omega$($\eta$, $\zeta$) represents the conservation of linear momentum, and ($\zeta$ + $\eta$)\times$\omega$($\eta$, $\zeta$)=0 indicates the conservation of angular momentum. It means that the force vector between $x$ and ${x'}$ is parallel to their current relative position vector. In this study, the crack pattern generated by impact of the indenter on disk is used as input data of machine learning algorithm. Therefore, Prototype Microelastic Brittle (PMB) model \cite{Ref4} was used for the constitutive model to obtain a more precise and complex crack pattern. The governing equations are given as: 
 
 %eq3
 \begin{equation}
 s=\frac{|\zeta+\eta|-|\zeta|}{|\zeta|}=\frac{y-|\zeta|}{|\zeta|}
 \end{equation}
 
-$f$ is the scalar valued bond force and it is defined in relation to bond stretch $s$. The best way to apply failure to the constitutive model is to allow the bonds to break when they exceed the predefined limit. If the bond is broken, the tensile strength cannot be restored. The PMB model is defined as follows.
+\noindent where $f$ is the scalar valued bond force and it is defined in relation to bond stretch $s$. The best way to apply failure to the constitutive model is to allow the bonds to break when they exceed the predefined limit. If the bond is broken, the tensile strength cannot be restored. The PMB model is defined as follows.
 %eq4
 \begin{equation}
 f(y(t),\zeta)=g(s(t,\zeta))\mu(t,\zeta)
@@ -225,7 +249,7 @@ g(s)=cs \quad\forall s
 \end{equation}
 
 
-$f$ is composed of the products of $g$ and $\mu$ functions. $g$ is the linear scalar-valued function which is composed of spring constant $c$, and bond stretch $s$. $\mu$ is a history-dependent scalar-valued function and has a value of 1 and 0 depending on the condition. In other words, if the bond stretch is less than critical bond stretch $s_0$, it has a value of 1, otherwise it has a value of 0. The spring constant c, and the critical bond stretch $s_0$ mentioned above are described in detail below.
+\noindent where $f$ is composed of the products of $g$ and $\mu$ functions. $g$ is the linear scalar-valued function which is composed of spring constant $c$, and bond stretch $s$. $\mu$ is a history-dependent scalar-valued function and has a value of 1 and 0 depending on the condition. In other words, if the bond stretch is less than critical bond stretch $s_0$, it has a value of 1, otherwise it has a value of 0. The spring constant c, and the critical bond stretch $s_0$ mentioned above are described in detail below.
 %Text with citations \cite{RefB} and \cite{RefJ}.
 %\subsection{Subsection title}
 %\label{sec:2}
@@ -248,13 +272,13 @@ s_0=\sqrt{\frac{10G_0}{\pi c\delta^5}}=\sqrt{\frac{5G_0}{9 k\delta}}
 G_0=\frac{\pi cs_0^2\delta^5}{10} 
 \end{equation}
 
-$k$ is the bulk modulus of the material and $G_0$ is the work required to break all bonds per unit fracture area. As we can be seen from the above equations, the spring constant and the critical bond stretch are composed of the bulk modulus of the material $k$, and chosen horizon boundary $\delta$. Finally, in the case of brittle materials such as glass, related to bond stretch, is defined as follows.
+\noindent where $k$ is the bulk modulus of the material and $G_0$ is the work required to break all bonds per unit fracture area. As we can be seen from the above equations, the spring constant and the critical bond stretch are composed of the bulk modulus of the material $k$, and chosen horizon boundary $\delta$. Finally, in the case of brittle materials such as glass, related to bond stretch, is defined as follows:
 
  \begin{equation}
 s_0=s_{00}-\alpha s_{min}(t), \quad s_{min}(t)=\min_\zeta{\frac{y(t)-|\zeta|}{|\zeta|}}
 \end{equation}
 
-$s_{min}$ is the current minimum stretch in the group of all bonds connected to a given point, $s_{00}$ and $\alpha$ are constants and $\alpha$ is generally used about 1/4. 
+\noindent where $s_{min}$ is the current minimum stretch in the group of all bonds connected to a given point, $s_{00}$ and $\alpha$ are constants and $\alpha$ is generally used about 1/4. 
 
 \section{Preparation of MD data using peridynamics model }
 \label{sec:3}
