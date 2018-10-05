@@ -149,8 +149,7 @@ This theory is a nonlocal extension of classical continuum mechanics and provide
 %%
 This model is based on integral equations, which can be applied directly to cracks with the advantage of not requiring to compute partial derivatives.
 %%
-Therefore, the peridynamics is very suitable for the study of surface discontinuities such as cracks, and
-{\rd{various multiscale modeling is possible due to SI units can be used.}}
+Therefore, the peridynamics is very suitable for the study of surface discontinuities such as cracks.
 %%
 Peridynamics can be of particular use in understanding the damage in membranes and nanofiber \cite{Ref5}, composites and brittle materials \cite{Ref6}, brazed single-lap joints \cite{Ref7}, fuel pellet \cite{Ref8} and biomembranes \cite{Ref9}.
 %%
@@ -180,10 +179,10 @@ By combining the accuracy of the peridynamics model with the computational speed
 \end{figure}
 
 Peridynamics is the non-local extension of the classical continuum mechanics. The model structure of peridynamics is the same as an MD model and in LAMMPS, SI units (m, kg, sec etc.) can be used for simulations.
-{\rd{Compared with FEM (Finite Element Method), FEM can only acquire approximate solutions and contain inherent errors due to $\pi$, $\sqrt{N}$, etc. The user's mistake in obtaining a solution can be incredibly deadly, and the results can vary depending on how the mesh is set.}}
+%Compared with FEM (Finite Element Method), FEM can only acquire approximate solutions and the user's mistake in obtaining a solution can be incredibly deadly, and the results can vary depending on how the mesh is set.
 %%
 %Finally,
-The FEM approach is based on partial differential equations, but these partial derivatives do not exist on crack surfaces.
+The finite element method (FEM) approach is based on partial differential equations, but these partial derivatives do not exist on crack surfaces.
 %%
 However, a peridynamics model can be used to overcome this difficulty.
 %%
@@ -206,14 +205,14 @@ The integral equation is used to calculate the current point forces per unit vol
 %%
 Due to spatial differentiation is not used in peridynamics, it is useful for analyzing discontinuous media and discrete particles such as cracks or damage.
 %%
-{\rd{The peridynamic equation of motion is given as :}}
+The peridynamic equation of motion is given as:
 
-
-where $\rho(x)$ is the density in the reference configuration, $F_x$ is the family of $x$ in the horizon $\delta$, $b$ represents the external force per unit volume and $u$ represent the displacement of the point $x$ at time $t$. $\omega$ is the pairwise bond force density that includes all of the information related to $x$ and ${x'}$. Next, the relative position vector which is time-independent and displacement vector which is time-dependent of two bonded points $x$ and ${x'}$ are defined by $\zeta$ = ${x'}$ - $x$ and $\eta$ = $u$(${x'}$,$t$) - $u$($x$,$t$), respectively. $\zeta$ + $\eta$ represents the current relative position vector between the particles. The pairwise bond force density $\omega$ should have the following properties: 
 %eq1 
 \begin{equation}
-\rho(x)\ddot{u}(x,t)=\int_{\mathcal{F}_x} \omega(u(x',t)-u(x,t),x'-x)dV_{x'}+b(x,t), \quad t\geq0
+\rho(x) \, \ddot{u}(x,t) \, \, = \, \, \int_{\mathcal{F}_x} \omega\left(u(x',t)-u(x,t),x'-x\right) \, \, dV_{x'} \, \, + \, \, b(x,t), \quad t\geq0
 \end{equation}
+
+\noindent where $\rho(x)$ is the density in the reference configuration, $F_x$ is the family of $x$ in the horizon $\delta$, $b$ represents the external force per unit volume and $u$ represent the displacement of the point $x$ at time $t$. $\omega$ is the pairwise bond force density that includes all of the information related to $x$ and ${x'}$. Next, the relative position vector which is time-independent and displacement vector which is time-dependent of two bonded points $x$ and ${x'}$ are defined by $\zeta$ = ${x'}$ - $x$ and $\eta$ = $u$(${x'}$,$t$) - $u$($x$,$t$), respectively. $\zeta$ + $\eta$ represents the current relative position vector between the particles. The pairwise bond force density $\omega$ should have the following properties: 
 %eq2
 \begin{equation}
 \omega(-\eta,-\zeta)= -\omega(\eta, \zeta),\quad(\zeta + \eta)\times\omega(\eta, \zeta)=0 \quad\forall\eta,\zeta
@@ -613,6 +612,10 @@ For the inverse problem, we will have to do more complex crack pattern studies b
 
 \section{Data and Code}
 \label{sec:6}
+The visualization tool can be downloaded from https://www.paraview.org.
+The LAMMPS and Tensorflow code for the forward problem are available on the GitHub repository  https://github.com/nw2190/LAMMPS.
+The LAMMPS and MatConvNet code for the inverse problem are also available for download at  https://github.com/moonseopkim/inverseproblem.
+
 
 %6
 %\section{Data and Code}
@@ -743,7 +746,7 @@ Goodfellow, I., Bengio, Y., Courville, A., \& Bengio, Y. (2016). Deep learning (
 \bibitem{Ref21}
 Géron, A. (2017). Hands-on machine learning with Scikit-Learn and TensorFlow: concepts, tools, and techniques to build intelligent systems. " O'Reilly Media, Inc.".
 \bibitem{Ref22}
-LeCun, Y., Bengio, Y., & Hinton, G. (2015). Deep learning. nature, 521(7553), 436.
+LeCun, Y., Bengio, Y., \& Hinton, G. (2015). Deep learning. nature, 521(7553), 436.
 \bibitem{Ref23}
 Krizhevsky, A., Sutskever, I., \& Hinton, G. E. (2012). Imagenet classification with deep convolutional neural networks. In Advances in neural information processing systems (pp. 1097-1105).
 \bibitem{Ref24}
