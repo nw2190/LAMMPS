@@ -85,7 +85,8 @@
 
 \begin{abstract}
 %Insert your abstract here. Include keywords, PACS and mathematical subject classification numbers as needed.
-Based on molecular dynamics (MD) simulations, machine learning and peridynamics are applied to prediction of disk damage patterns for the forward problem and conversely, in inverse problem, damage pattern of the disk is used to predict the size, angle and velocity of the indenter. Peridynamics is the nonlocal extension of classical continuum mechanics and same as MD model. Especially, FEM is based on the partial differential equations. However, partial derivatives do not exist on the crack and damage surfaces. To complement this problem, peridynamics was used which is based on the integral equations and overcome deficiencies in the modeling of deformation discontinuities. Using the advantage of crack analysis of peridynamics, this study produced data using peridynamics for the material of crack pattern. In this study, the forward problem (i), if we have images of damage and crack, crack patterns are predicted using trained data compared to true solutions which are hit by changing the $x$ and $z$ hitting coordinates on the disk. The inverse problem (ii), if we have images of damage and crack, the corresponding hitting location, the velocity of indenter, the angle of indenter and the size of indenter are predicted using trained data. 
+%Based on molecular dynamics (MD) simulations, 
+Machine learning and peridynamics are applied to prediction of disk damage patterns for the forward problem and conversely, in inverse problem, damage pattern of the disk is used to predict the size, angle and velocity of the indenter. Peridynamics is the nonlocal extension of classical continuum mechanics and same as molecular dynamics model. Especially, finite element method is based on the partial differential equations. However, partial derivatives do not exist on the crack and damage surfaces. To complement this problem, peridynamics was used which is based on the integral equations and overcome deficiencies in the modeling of deformation discontinuities. Using the advantage of crack analysis of peridynamics, this study produced data using peridynamics for the material of crack pattern. In this study, the forward problem (i), if we have images of damage and crack, crack patterns are predicted using trained data compared to true solutions which are hit by changing the $x$ and $z$ hitting coordinates on the disk. The inverse problem (ii), if we have images of damage and crack, the corresponding hitting location, the velocity of indenter, the angle of indenter and the size of indenter are predicted using trained data. 
 \keywords{Peridynamics \and Crack \and MD simulation \and Machine learning \and Convolutional Neural Network}
 % \PACS{PACS code1 \and PACS code2 \and more}
 % \subclass{MSC code1 \and MSC code2 \and more}
@@ -93,7 +94,7 @@ Based on molecular dynamics (MD) simulations, machine learning and peridynamics 
 
 \section{Introduction}
 \label{sec:1}
-Many products in everyday life are damaged by external shocks or user's mistakes, and cracks are formed. In the Department Of Energy (DOE), it is often the case that blades of thermoelectric power plant and wind power plant are damaged by rotation, temperature effects, and external wind influences. In the reactor of the nuclear power plant, cracks are occurred due to heat generated during nuclear fission. This can lead to not only high maintenance costs but also a national disaster. So far, research on cracking has been going on in various perspectives for several decades. Representatively, various types of structures and material behaviors have been studied through the finite element analysis (FEM). However, there are inherent errors in the study through the FEM. In the FEM, only the approximate solution can be obtained. Also, the results of analysis tend to depend on the mesh, and the mistakes by the researchers can be fatal to derive the results. Finally, the FEM is based on partial differential equations, but the partial derivatives are not present on the surface of the crack, so it is not enough to get accurate results. Therefore, in order to compensate for these drawbacks, we conducted a crack pattern study using the peridynamics. The peridynamics theory of solid mechanics was first introduced by S. Silling \cite{Ref1,Ref2,Ref3,Ref4}. This theory is a nonlocal extension of classical continuum mechanics and it is an alternative to continuum mechanics for more accurate crack studies. This model is based on the integral equations, which can be applied directly to cracks with the advantage of not requiring to compute partial derivatives. Therefore, the peridynamics is very suitable for the study of surface discontinuity such as cracks, and various multiscale modeling is possible due to SI units can be used. The peridynamics can be of particular use in understanding the damage in membranes and nanofiber \cite{Ref5}, composites and brittle materials \cite{Ref6}, brazed single-lap joints \cite{Ref7}, fuel pellet \cite{Ref8} and biomembranes \cite{Ref9}. The peridynamics can be applied not only to damage studies, but also to technologically important areas such as prediction of viscoelastic materials \cite{Ref10}, piezo-resistive response of carbon nanotube nanocomposites \cite{Ref11}, phase transformation in zirconium dioxide \cite{Ref12}, shock and vibration \cite{Ref13}, and indentation of thin copper film \cite{Ref14}.
+Many products in everyday life are damaged by external shocks or user's mistakes, and cracks are formed. In the Department Of Energy (DOE), it is often the case that blades of thermoelectric power plant and wind power plant are damaged by rotation, temperature effects, and external wind influences. In the reactor of the nuclear power plant, cracks are occurred due to heat generated during nuclear fission. This can lead to not only high maintenance costs but also a national disaster. So far, research on cracking has been going on in various perspectives for several decades. Representatively, various types of structures and material behaviors have been studied through the finite element analysis (FEM). However, there are inherent errors in the study through the FEM. In the FEM, only the approximate solution can be obtained. Also, the results of analysis tend to depend on the mesh, and the mistakes by the researchers can be fatal to derive the results. Finally, the FEM is based on partial differential equations, but the partial derivatives are not present on the surface of the crack, so it is not enough to get accurate results. Therefore, in order to compensate for these drawbacks, we conducted a crack pattern study using the peridynamics. The peridynamics theory of solid mechanics was first introduced by S. Silling \cite{Ref1,Ref2,Ref3,Ref4}. This theory is a nonlocal extension of classical continuum mechanics and it is an alternative to continuum mechanics for more accurate crack studies. This model is based on the integral equations, which can be applied directly to cracks with the advantage of not requiring to compute partial derivatives. Therefore, the peridynamics is very suitable for the study of surface discontinuity such as cracks. The peridynamics can be of particular use in understanding the damage in membranes and nanofiber \cite{Ref5}, composites and brittle materials \cite{Ref6}, brazed single-lap joints \cite{Ref7}, fuel pellet \cite{Ref8} and biomembranes \cite{Ref9}. The peridynamics can be applied not only to damage studies, but also to technologically important areas such as prediction of viscoelastic materials \cite{Ref10}, piezo-resistive response of carbon nanotube nanocomposites \cite{Ref11}, phase transformation in zirconium dioxide \cite{Ref12}, shock and vibration \cite{Ref13}, and indentation of thin copper film \cite{Ref14}.
 Though the peridynamics framework has proven to be a powerful and widely applicable tool, the computational demand can become burdensome very quickly as the scales of the simulations are increased.  In order to decrease the computation time required to run these simulations while maintaining a high level of accuracy, we propose a machine learning approach which utilizes recent design and hardware advances that have greatly improved the performance of artificial neural networks (ANNs).  Recently, convolutional neural networks (CNNs) have been shown to provide an excellent light-weight alternative to traditional fully-connected networks, and are particularly well-suited for applications on highly structured data, which is characteristic of the systems considered in peridynamics. These networks have the advantage of being trainable in advance, learning from a dataset generated by a highly accurate model such as peridynamics and encoding an approximation of the model into a concise, neural network representation; this approximate model can then be used after the training procedure to produce near instantaneous results.  By combining the accuracy of the peridynamics model with the computational speed of modern neural networks, we show that complex MD simulations can be accurately performed using just a fraction of the computation time required by traditional approaches.
 
 \section{The peridynamics model}
@@ -109,21 +110,19 @@ Though the peridynamics framework has proven to be a powerful and widely applica
 \label{fig:1}       % Give a unique label
 \end{figure}
 
-The peridynamics is the non-local extension of the classical continuum mechanics. The model structure of peridynamics is the same as an MD model and in LAMMPS, SI units (m, kg, sec etc.) can be used for simulation. Compared with FEM (Finite Element Method), FEM can only acquire approximate solutions and contain inherent errors due to $\pi$, $\sqrt{N}$, etc. The user's mistake in obtaining a solution can be incredibly deadly, and the results can vary depending on how the mesh is set. Finally, the FEM is based on partial differential equations, but there are no partial derivatives on crack surfaces. Therefore, to secure this weakness, the peridynamics model is used. The peridynamics model is based on integral equations. In the analysis of damage and cracks, the integral equations of the peridynamics theory can be applied directly, because they do not require partial derivatives. Accordingly, it overcomes deficiencies in the modeling of deformation discontinuities. Next, let's look at the governing equations of the peridynamics model \cite{Ref2,Ref3,Ref4}. Fig. 1 is plotted to represent the composition of the peridynamics model. As you can see in the Fig. 1, $\mathcal{F}_x$ (Family of $x$) exists in the body, and there are arbitrary points $x$ and ${x'}$ in it. $x$ and ${x'}$ are the points given in the reference configuration. $u$($x$,$t$) and $y$($x$,$t$) represent the displacement and position of the point $x$ at time $t$ respectively. In peridynamics theory, all points, including $x$ and ${x'}$ in the horizon $\delta$ boundary, are interconnected by bonds. That is, each point has connectivity to all points in horizon $\delta$ as well as nearby neighbors. Thus, as mentioned above, the peridynamics is a non-local extension of the classical continuum mechanics. The integral equation is used to calculate the current point forces per unit volume. Due to spatial differentiation is not used in peridynamics, it is useful for analyzing discontinuous media and discrete particles such as cracks or damage. The peridynamic equation of motion is given as :
+The peridynamics is the non-local extension of the classical continuum mechanics. The model structure of peridynamics is the same as an MD model and in LAMMPS, SI units (m, kg, sec etc.) can be used for simulation. Compared with FEM (Finite Element Method), FEM can only acquire approximate solutions and the user's mistake in obtaining a solution can be incredibly deadly, and the results can vary depending on how the mesh is set. Finally, the FEM is based on partial differential equations, but there are no partial derivatives on crack surfaces. Therefore, to secure this weakness, the peridynamics model is used. The peridynamics model is based on integral equations. In the analysis of damage and cracks, the integral equations of the peridynamics theory can be applied directly, because they do not require partial derivatives. Accordingly, it overcomes deficiencies in the modeling of deformation discontinuities. Next, let's look at the governing equations of the peridynamics model \cite{Ref2,Ref3,Ref4}. Fig. 1 is plotted to represent the composition of the peridynamics model. As you can see in the Fig. 1, $\mathcal{F}_x$ (Family of $x$) exists in the body, and there are arbitrary points $x$ and ${x'}$ in it. $x$ and ${x'}$ are the points given in the reference configuration. $u$($x$,$t$) and $y$($x$,$t$) represent the displacement and position of the point $x$ at time $t$ respectively. In peridynamics theory, all points, including $x$ and ${x'}$ in the horizon $\delta$ boundary, are interconnected by bonds. That is, each point has connectivity to all points in horizon $\delta$ as well as nearby neighbors. Thus, as mentioned above, the peridynamics is a non-local extension of the classical continuum mechanics. The integral equation is used to calculate the current point forces per unit volume. Due to spatial differentiation is not used in peridynamics, it is useful for analyzing discontinuous media and discrete particles such as cracks or damage. The peridynamic equation of motion is given as :
 
-
- $\rho(x)$ is the density in the reference configuration, $F_x$ is the family of $x$ in the horizon $\delta$, $b$ represents the external force per unit volume and $u$ represent the displacement of the point $x$ at time $t$. $\omega$ is the pairwise bond force density that includes all of the information related to $x$ and ${x'}$. Next, the relative position vector which is time-independent and displacement vector which is time-dependent of two bonded points $x$ and ${x'}$ are defined by $\zeta$ = ${x'}$ - $x$ and $\eta$ = $u$(${x'}$,$t$) - $u$($x$,$t$), respectively. $\zeta$ + $\eta$ represents the current relative position vector between the particles. The pairwise bond force density $\omega$ should have the following properties: 
 %eq1 
 \begin{equation}
 \rho(x)\ddot{u}(x,t)=\int_{\mathcal{F}_x} \omega(u(x',t)-u(x,t),x'-x)dV_{x'}+b(x,t), \quad t\geq0
 \end{equation}
-%eq2
+
+ where $\rho(x)$ is the density in the reference configuration, $F_x$ is the family of $x$ in the horizon $\delta$, $b$ represents the external force per unit volume and $u$ represent the displacement of the point $x$ at time $t$. $\omega$ is the pairwise bond force density that includes all of the information related to $x$ and ${x'}$. Next, the relative position vector which is time-independent and displacement vector which is time-dependent of two bonded points $x$ and ${x'}$ are defined by $\zeta$ = ${x'}$ - $x$ and $\eta$ = $u$(${x'}$,$t$) - $u$($x$,$t$), respectively. $\zeta$ + $\eta$ represents the current relative position vector between the particles. The pairwise bond force density $\omega$ should have the following properties: 
+ 
+ %eq2
 \begin{equation}
 \omega(-\eta,-\zeta)= -\omega(\eta, \zeta),\quad(\zeta + \eta)\times\omega(\eta, \zeta)=0 \quad\forall\eta,\zeta
 \end{equation}
-
-
-
 
 $\omega$($-\eta$,$-\zeta$)= $-\omega$($\eta$, $\zeta$) represents the conservation of linear momentum, and ($\zeta$ + $\eta$)\times$\omega$($\eta$, $\zeta$)=0 indicates the conservation of angular momentum. It means that the force vector between $x$ and ${x'}$ is parallel to their current relative position vector. In this study, the crack pattern generated by impact of the indenter on disk is used as input data of machine learning algorithm. Therefore, Prototype Microelastic Brittle (PMB) model \cite{Ref4} was used for the constitutive model to obtain a more precise and complex crack pattern. The governing equations are given as: 
 
@@ -191,7 +190,7 @@ The spherical indenter impacted the disk by dropping the spherical indenter in t
 
 \begin{figure}[h]
 \begin{subfigure}
-\includegraphics[height=5.8cm]{figure/initialdisk.eps}
+\includegraphics[width=5.8cm,height=5.8cm]{figure/initialdisk.eps}
 \label{initial}
 \end{subfigure}
 \begin{subfigure}
@@ -465,7 +464,7 @@ Data was trained by Matconvnet based on MATLAB. Convolution neural networks (CNN
 \label{subsubsec3}
 \begin{figure}
 \centering
-\includegraphics[height=10cm]{figure/error1.eps}
+\includegraphics[width=10cm, height=10cm]{figure/error1.eps}
 \caption{Objective and error plots during the training.}
 \label{fig:5}       
 \end{figure}
@@ -517,47 +516,8 @@ For the inverse problem, we will have to do more complex crack pattern studies b
 \section{Data and Code}
 \label{sec:6}
 
-%6
-%\section{Data and Code}
-%\label{sec:6}
-
-% For one-column wide figures use
-%\begin{figure}
-% Use the relevant command to insert your figure file.
-% For example, with the graphicx package use
-%  \includegraphics{example.eps}
-% figure caption is below the figure
-%\caption{Please write your figure caption here}
-%\label{fig:1}       % Give a unique label
-%\end{figure}
-%
-% For two-column wide figures use
-%\begin{figure*}
-% Use the relevant command to insert your figure file.
-% For example, with the graphicx package use
-%  \includegraphics[width=0.75\textwidth]{example.eps}
-% figure caption is below the figure
-%\caption{Please write your figure caption here}
-%\label{fig:2}       % Give a unique label
-%\end{figure*}
-%
-
-% For tables use
-%\begin{table}
-% table caption is above the table
-%\caption{Please write your table caption here}
-%\label{tab:1}       % Give a unique label
-% For LaTeX tables use
-%\begin{tabular}{lll}
-%\hline\noalign{\smallskip}
-%first & second & third  \\
-%\noalign{\smallskip}\hline\noalign{\smallskip}
-%number & number & number \\
-%number & number & number \\
-%\noalign{\smallskip}\hline
-%\end{tabular}
-%\end{table}
-
+The visualization tool can be downloaded from https://www.paraview.org. Data, peridynamics code and Matconvnet code for inverse problem can be downloaded from https://github.com/moonseopkim/inverseproblem.
+Data and Tensorflow code for forward problem can be downloaded from https://github.com/nw2190/LAMMPS.
 
 \begin{acknowledgements}
 We gratefully acknowledge the support from National Science foundation (DMS-1555072, DMS-1736364 and DMS-1821233).
@@ -646,7 +606,7 @@ Goodfellow, I., Bengio, Y., Courville, A., \& Bengio, Y. (2016). Deep learning (
 \bibitem{Ref21}
 Géron, A. (2017). Hands-on machine learning with Scikit-Learn and TensorFlow: concepts, tools, and techniques to build intelligent systems. " O'Reilly Media, Inc.".
 \bibitem{Ref22}
-LeCun, Y., Bengio, Y., & Hinton, G. (2015). Deep learning. nature, 521(7553), 436.
+LeCun, Y., Bengio, Y., \& Hinton, G. (2015). Deep learning. nature, 521(7553), 436.
 \bibitem{Ref23}
 Krizhevsky, A., Sutskever, I., \& Hinton, G. E. (2012). Imagenet classification with deep convolutional neural networks. In Advances in neural information processing systems (pp. 1097-1105).
 \bibitem{Ref24}
@@ -659,8 +619,6 @@ Nasrabadi, N. M. (2007). Pattern recognition and machine learning. Journal of el
 \end{thebibliography}
 
 \end{document}
-
-
 
 % LocalWords:  peridynamics Moonseop Guang Wontae Jeong indenter ANNs
 % LocalWords:  nonlocal Convolutional thermoelectric multiscale piezo

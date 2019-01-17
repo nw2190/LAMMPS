@@ -49,6 +49,10 @@
 %
 \usepackage{graphicx}
 \usepackage{bbm}
+%\usepackage{epstopdf}
+\usepackage[outdir=./figure/]{epstopdf}
+%\usepackage[outdir=./]{epstopdf}
+%\graphicspath{{./figure/}}
 %
 % \usepackage{mathptmx}      % use Times fonts if available on your TeX system
 %
@@ -92,7 +96,7 @@
 
 \begin{abstract}
   %%
-  In this work we introduce convolutional neural networks designed to predict and analyze damage patterns on a disk resulting from molecular dynamics (MD) collision simulations.
+  In this work, we introduce convolutional neural networks designed to predict and analyze damage patterns on a disk resulting from molecular dynamics (MD) collision simulations.
   %%
   The simulations under consideration are specifically designed to produce cracks on the disk and, accordingly, numerical methods which require partial derivative information, such as finite element analysis, are not applicable.
   %%
@@ -138,10 +142,13 @@
 %%
 %Representatively, various types of structures and material behaviors have been studied through the finite element analysis (FEM). However, there are inherent errors in the study through the FEM. In the FEM, only the approximate solution can be obtained. Also, the results of analysis tend to depend on the mesh, and the mistakes by the researchers can be fatal to derive the results.
 %%
-The finite element method (FEM) is based on partial differential equations, but the partial derivatives are not present on the surface of the crack,
-so it is not enough to get accurate results.
+The finite element method (FEM) is
+{\rd{performed on the basis of the partial differential equations}},
+but the partial derivatives are not present on the surface of the crack,
+{\rd{so it is not enough to get accurate results}}.
 %%
-Therefore, in order to compensate for these drawbacks, we conducted a crack pattern study using the peridynamics.
+%Therefore, i
+In order to compensate for these drawbacks, we conducted a crack pattern study using peridynamics.
 %%
 The peridynamics theory of solid mechanics was first introduced by S. Silling \cite{Ref1,Ref2,Ref3,Ref4}.
 %%
@@ -149,7 +156,7 @@ This theory is a nonlocal extension of classical continuum mechanics and provide
 %%
 This model is based on integral equations, which can be applied directly to cracks with the advantage of not requiring to compute partial derivatives.
 %%
-Therefore, the peridynamics is very suitable for the study of surface discontinuities such as cracks.
+Therefore, peridynamics is very suitable for the study of surface discontinuities such as cracks.
 %%
 Peridynamics can be of particular use in understanding the damage in membranes and nanofiber \cite{Ref5}, composites and brittle materials \cite{Ref6}, brazed single-lap joints \cite{Ref7}, fuel pellet \cite{Ref8} and biomembranes \cite{Ref9}.
 %%
@@ -178,41 +185,52 @@ By combining the accuracy of the peridynamics model with the computational speed
 \label{fig:1}       % Give a unique label
 \end{figure}
 
-Peridynamics is the non-local extension of the classical continuum mechanics. The model structure of peridynamics is the same as an MD model and in LAMMPS, SI units (m, kg, sec etc.) can be used for simulations.
+Peridynamics is the non-local extension of classical continuum mechanics \cite{Ref15}. The model structure of peridynamics is the same as an MD model {\rd{and in LAMMPS, SI units (m, kg, sec etc.) can be used for simulations}}.
 %Compared with FEM (Finite Element Method), FEM can only acquire approximate solutions and the user's mistake in obtaining a solution can be incredibly deadly, and the results can vary depending on how the mesh is set.
 %%
 %Finally,
-The finite element method (FEM) approach is based on partial differential equations, but these partial derivatives do not exist on crack surfaces.
+The finite element method (FEM) approach is based on partial differential equations, but these partial derivatives do not exist on the crack surfaces.
 %%
 However, a peridynamics model can be used to overcome this difficulty.
 %%
-The peridynamics model is based on integral equations.
+The peridynamics model formulation is based on integral equations.
 %%
-In the analysis of damage and cracks, the integral equations of the peridynamics theory can be applied directly, because they do not require partial derivatives.
+In the analysis of damage and cracks, the integral equations of the peridynamics theory can be applied directly, since it does not require partial derivatives.
 %%
 Accordingly, it overcomes deficiencies in the modeling of deformation discontinuities.
 %%
-Next, let's look at the governing equations of the peridynamics model \cite{Ref2,Ref3,Ref4}.
+Next, let us look at the governing equations of the peridynamics model \cite{Ref2,Ref3,Ref4}.
 %%
-Fig. 1 is plotted to represent the composition of the peridynamics model.
+%Fig. 1 is plotted to represent the composition of the peridynamics model.
+Fig.~\ref{fig:1} gives an overview of the composition of the peridynamics model.
 %%
-As you can see in the Fig. 1, $\mathcal{F}_x$ (Family of $x$) exists in the body, and there are arbitrary points $x$ and ${x'}$ in it. %%
-$x$ and ${x'}$ are the points given in the reference configuration. $u$($x$,$t$) and $y$($x$,$t$) represent the displacement and position of the point $x$ at time $t$ respectively. In peridynamics theory, all points, including $x$ and ${x'}$ in the horizon $\delta$ boundary, are interconnected by bonds.
+As you can see in Fig.~\ref{fig:1}, $\mathcal{F}_x$ (Family of $x$) exists in the body, and  $x$ and ${x'}$ represent arbitrary points inside of the body. %%
+{\rd{$x$ and ${x'}$ are the points given in the reference configuration}}.
 %%
-That is, each point has connectivity to all points in horizon $\delta$ as well as nearby neighbors. Thus, as mentioned above, the peridynamics is a non-local extension of the classical continuum mechanics.
+$u(x,t)$ and $y(x,t)$ represent the displacement and position of the point $x$ at time $t$, respectively.
 %%
-The integral equation is used to calculate the current point forces per unit volume.
+In peridynamics theory, all points, including $x$ and ${x'}$ in the horizon $\delta$ boundary, are interconnected by bonds.
 %%
-Due to spatial differentiation is not used in peridynamics, it is useful for analyzing discontinuous media and discrete particles such as cracks or damage.
+That is, each point {\rd{has connectivity to all points in horizon $\delta$ as well as nearby neighbors}}.
 %%
-The peridynamic equation of motion is given as:
+{\rd{Thus, as mentioned above, peridynamics is a non-local extension of the classical continuum mechanics.}}
+%%
+{\rd{The integral equation is accustomed to calculate the current point forces per unit volume.}}
+%%
+Since spatial differentiation is not used in peridynamics, it is useful for analyzing discontinuous media and discrete particles such as cracks or damage.
+%%
+The peridynamic equation of motion is given by:
 
 %eq1 
 \begin{equation}
 \rho(x) \, \ddot{u}(x,t) \, \, = \, \, \int_{\mathcal{F}_x} \omega\left(u(x',t)-u(x,t),x'-x\right) \, \, dV_{x'} \, \, + \, \, b(x,t), \quad t\geq0
 \end{equation}
 
-\noindent where $\rho(x)$ is the density in the reference configuration, $F_x$ is the family of $x$ in the horizon $\delta$, $b$ represents the external force per unit volume and $u$ represent the displacement of the point $x$ at time $t$. $\omega$ is the pairwise bond force density that includes all of the information related to $x$ and ${x'}$. Next, the relative position vector which is time-independent and displacement vector which is time-dependent of two bonded points $x$ and ${x'}$ are defined by $\zeta$ = ${x'}$ - $x$ and $\eta$ = $u$(${x'}$,$t$) - $u$($x$,$t$), respectively. $\zeta$ + $\eta$ represents the current relative position vector between the particles. The pairwise bond force density $\omega$ should have the following properties: 
+\noindent where $\rho(x)$ is the density in the reference configuration, $F_x$ is the family of $x$ in the horizon $\delta$, $b$ indicates the external force per unit volume and $u$ represent the displacement of the point $x$ at time $t$. $\omega$ is the pairwise bond force density that includes all of the information related to $x$ and ${x'}$.
+%%
+%Next, the relative position vector which is time-independent and displacement vector which is time-dependent of two bonded points $x$ and ${x'}$ are defined by $\zeta$ = ${x'}$ - $x$ and $\eta$ = $u$(${x'}$,$t$) - $u$($x$,$t$), respectively.
+Next, the time-independent relative position vector and time-dependent displacement vector of two bonded points $x$ and ${x'}$ are defined by $\zeta$ = ${x'}$ - $x$ and $\eta$ = $u$(${x'}$,$t$) - $u$($x$,$t$), respectively.
+$\zeta$ + $\eta$ represents the current relative position vector between the particles. The pairwise bond force density $\omega$ {\rd{should have}} the following properties: 
 %eq2
 \begin{equation}
 \omega(-\eta,-\zeta)= -\omega(\eta, \zeta),\quad(\zeta + \eta)\times\omega(\eta, \zeta)=0 \quad\forall\eta,\zeta
@@ -221,14 +239,14 @@ The peridynamic equation of motion is given as:
 
 
 
-\noindent where $\omega$($-\eta$,$-\zeta$)= $-\omega$($\eta$, $\zeta$) represents the conservation of linear momentum, and ($\zeta$ + $\eta$)\times$\omega$($\eta$, $\zeta$)=0 indicates the conservation of angular momentum. It means that the force vector between $x$ and ${x'}$ is parallel to their current relative position vector. In this study, the crack pattern generated by impact of the indenter on disk is used as input data of machine learning algorithm. Therefore, Prototype Microelastic Brittle (PMB) model \cite{Ref4} was used for the constitutive model to obtain a more precise and complex crack pattern. The governing equations are given as: 
+\noindent where $\omega(-\eta,-\zeta)= -\omega(\eta, \zeta)$ represents the conservation of linear momentum, and $(\zeta + \eta)\times\omega(\eta, \zeta)=0$ indicates the conservation of angular momentum. This implies that the force vector between $x$ and ${x'}$ is parallel to their current relative position vector. In this study, the crack pattern generated by impact of an indenter on a disk is used as input data of a machine learning algorithm. More specifically, a Prototype Microelastic Brittle (PMB) model \cite{Ref4} was used for the constitutive model to obtain a more precise and complex crack pattern. The governing equations are given as: 
 
 %eq3
 \begin{equation}
 s=\frac{|\zeta+\eta|-|\zeta|}{|\zeta|}=\frac{y-|\zeta|}{|\zeta|}
 \end{equation}
 
-\noindent where $f$ is the scalar valued bond force and it is defined in relation to bond stretch $s$. The best way to apply failure to the constitutive model is to allow the bonds to break when they exceed the predefined limit. If the bond is broken, the tensile strength cannot be restored. The PMB model is defined as follows.
+\noindent where $f$ is the scalar valued bond force defined in relation to bond stretch $s$. The best way {\rf{to apply failure}} to the constitutive model is to allow the bonds to break when they exceed a predefined limit. If the bond is broken, the tensile strength cannot be restored. The PMB model is defined as follows:
 %eq4
 \begin{equation}
 f(y(t),\zeta)=g(s(t,\zeta))\mu(t,\zeta)
@@ -248,7 +266,7 @@ g(s)=cs \quad\forall s
 \end{equation}
 
 
-\noindent where $f$ is composed of the products of $g$ and $\mu$ functions. $g$ is the linear scalar-valued function which is composed of spring constant $c$, and bond stretch $s$. $\mu$ is a history-dependent scalar-valued function and has a value of 1 and 0 depending on the condition. In other words, if the bond stretch is less than critical bond stretch $s_0$, it has a value of 1, otherwise it has a value of 0. The spring constant c, and the critical bond stretch $s_0$ mentioned above are described in detail below.
+\noindent where $f$ is composed of the products of the $g$ and $\mu$ functions. $g$ is the linear scalar-valued function which is composed of the spring constant $c$ and bond stretch $s$. $\mu$ is a history-dependent scalar-valued function and has a value of 1 and 0 depending on the following condition: if the bond stretch is less than the critical bond stretch $s_0$, it has a value of 1, otherwise it has a value of 0. The spring constant $c$ and the critical bond stretch $s_0$ mentioned above are described in detail below.
 %Text with citations \cite{RefB} and \cite{RefJ}.
 %\subsection{Subsection title}
 %\label{sec:2}
@@ -271,33 +289,89 @@ s_0=\sqrt{\frac{10G_0}{\pi c\delta^5}}=\sqrt{\frac{5G_0}{9 k\delta}}
 G_0=\frac{\pi cs_0^2\delta^5}{10} 
 \end{equation}
 
-\noindent where $k$ is the bulk modulus of the material and $G_0$ is the work required to break all bonds per unit fracture area. As we can be seen from the above equations, the spring constant and the critical bond stretch are composed of the bulk modulus of the material $k$, and chosen horizon boundary $\delta$. Finally, in the case of brittle materials such as glass, related to bond stretch, is defined as follows:
+\noindent Here $k$ is the bulk modulus of the material and $G_0$ is the work required {\rd{to crack the all bonds}} per unit fracture area. As seen from the equations above, the spring constant and the critical bond stretch are composed of the bulk modulus of the material $k$ and chosen horizon boundary $\delta$. Finally, in the case of brittle materials such as glass, {\rd{related to bond stretch}}, {\rd{is defined as follows}}:
 
  \begin{equation}
 s_0=s_{00}-\alpha s_{min}(t), \quad s_{min}(t)=\min_\zeta{\frac{y(t)-|\zeta|}{|\zeta|}}
 \end{equation}
 
-\noindent where $s_{min}$ is the current minimum stretch in the group of all bonds connected to a given point, $s_{00}$ and $\alpha$ are constants and $\alpha$ is generally used about 1/4. 
+ \noindent where $s_{min}$ is the current minimum stretch in the group of all bonds linked to a given point.
+ $s_{00}$ and $\alpha$ {\rd{are constants}} and $\alpha$ is generally used about 1/4. 
 
-\section{Preparation of MD data using peridynamics model }
+\section{Preparation of MD data using the peridynamics model }
 \label{sec:3}
 
-In this study, crack pattern data were generated by using the peridynamics in the LAMMPS \cite{Ref15}, a kind of MD simulation tool.
-The spherical indenter impacted the disk by dropping the spherical indenter in the direction perpendicular to the disk, it means from the ${+y}$ axis to disk and varying the $x$ and $z$ coordinates of the indenter to impact whole parts of the disk. The radius of the indenter are 0.007m and 0.008m for the inverse problem and the velocity are 100m/s and 100.1m/s, however, for the forward problem, the radius of the indenter and velocity are fixed by 0.0020m and 100m/s respectively. The radius of the cylindrical disk is 0.037m, the thickness is 0.0025m and this disk contains 103,110 particles. Each particle $i$ has volume fraction $V_i$=1.25 \times 10$^{-10}$m$^3$ and the density of the disk material is $\rho$=2200kg/m$^3$. The pair style in LAMMPS is used peri/pmb model. Pair constants are $c$, horizon, $s_{00}$ and $\alpha$ in order of 1.6863e22, 0.0015001, 0.0005, 0.25 respectively. $c$ is the spring constant for peridynamic bonds, the horizon is a cutoff distance. $s_{00}$ and $\alpha$ are used as a critical bond stretch parameters. LAMMPS MD simulation tool is used to obtain the crack pattern data generated by the indenter using peridynamics, and obtain the specific data by changing the variable using for loops to adjust the velocity and radius of the indenter and the hitting point of the disk. SI units are to be used and the boundary is non-periodic and shrink-wrapped. The particle volume is used in a simple cubic lattice and the lattice constant is 0.001m. Cylinder disk (target) with a radius of 0.037 m and a thickness of 0.0025 m is set. The initial velocity of all particles set 0, and the hitting location, velocity, and radius of the indenter should be saved to do damage prediction for the next steps after the MD simulation, so we set up to save the parameters information in indenter.txt. In addition, for the inverse problem, the damage is given to the whole parts of the target, but in the forward problem, peridynamics proved to be inaccurate in the boundary part, and data is obtained by only damaging 1/5 size around the center of the target. Finally, we declare a dump command to obtain the crack pattern image, and 2000 time-steps of running simulation to get the data are used, and we set it to 2000 time-steps in dump command as well. The reason for this is that the image we want for prediction in next step is the initial image and the final image due to the same as the meaning of 2000 in the dump command is to store the $x$,$z$ coordinates of the atoms at the initial target and 2000 time-steps of the target. 
+In this study, crack pattern data was generated using the peridynamics model implemented in LAMMPS \cite{Ref16}, an MD simulation tool.
+%%
+{\rd{A spherical indenter impacted the disk by dropping the spherical indenter in the direction perpendicular to the disk, it means from the ${+y}$ axis to disk and varying the $x$ and $z$ coordinates of the indenter to impact whole parts of the disk.}}
+%%
+For the inverse problem, the indenter varied between two radius sizes, 0.007m and 0.008m, and two velocites, 100m/s and 100.1m/s.
+%%
+For the forward problem, the indenter radius and velocity were fixed at 0.002m and 100m/s, respectively.
+%The radius of the indenter are 0.007m and 0.008m for the inverse problem
+%and the velocity are 100m/s and 100.1m/s,
+%however, for the forward problem, the radius of the indenter and velocity are fixed by 0.0020m and 100m/s respectively.
+%%
+%The radius of the cylindrical disk is 0.037m, the thickness is 0.0025m and this disk contains 103,110 particles.
+The cylindrical disk impacted by the indenter has been assigned a radius of 0.037m, thickness of 0.0025m, and consists of 103,110 particles.
+%%
+Each particle $i$ {\rd{has volume fraction}} $V_i$=1.25 \times 10$^{-10}$m$^3$, and the density of the disk material is $\rho$=2200kg/m$^3$.
+%%
+The `peri/pmb' peridynamic pair style was selected for the simulations conducted using LAMMPS.
+%%
+%{\rd{Pair constants are $c$, horizon, $s_{00}$ and $\alpha$ in order of 1.6863e22, 0.0015001, 0.0005, 0.25 respectively.}}
+The pair constants for the simulations have been specified as follows: $c=1.6863\mathrm{e}22$, horizon equal to $0.0015001$, $s_{00}= 0.0005$, and $\alpha = 0.25$.
+%%
+$c$ is the spring constant for peridynamic bonds, the horizon {\rd{is a cutoff distance}},
+%%
+and the constants $s_{00}$ and $\alpha$ {\rd{are used as}} critical bond stretch parameters.
+%%
+The LAMMPS MD simulation tool (PDLAMMPS) \cite{Ref17,Ref18} is used to obtain the crack pattern data generated by the indenter using peridynamics simulations,
+%%
+{\rd{and obtain the specific data by changing the variable using for loops to adjust the velocity and radius of the indenter and the hitting point of the disk.}}
+%%
+{\rd{SI units are to be used}} and the boundary is non-periodic and {\rd{shrink-wrapped [clarification?]}}.
+%%
+The particle volume {\rd{is used in a}} simple cubic lattice with lattice constant 0.001m.
+%%
+A cylinder disk (target) with radius 0.037m and thickness 0.0025 m is initialized.
+%%
+The initial velocity of all particles is set to zero, and the hitting location, velocity, and radius of the indenter {\rd{should be saved to do damage prediction for the next steps after the MD simulation, so we set up to save the parameters information in indenter.txt}}.
+%%
+%In addition, for the inverse problem, the damage is given to the whole parts of the target, but in the forward problem, peridynamics proved to be inaccurate in the boundary part, and data is obtained by only damaging 1/5 size around the center of the target.
+For the inverse problem, the indenter hit locations are varied throughout the whole of the target disk;
+in the forward problem, however, only the inner third of the disk has been targeted in order to avoid inaccuracies in the peridynamics simulation caused by the disk's boundary.
+%%
+{\rd{Finally, we declare a dump command to obtain the crack pattern image, and 2000 time-steps of running simulation to get the data are used, and we set it to 2000 time-steps in dump command as well.}}
+%%
+{\rd{The reason for this is that the image we want for the prediction in the next step is the initial image and the final image due to the same as the meaning of 2000 in the dump command is to store the $x$,$z$ coordinates of the atoms at the initial target and 2000 time-steps of the target. }}
 
 \begin{figure}[h]
 \begin{subfigure}
-\includegraphics[height=5.8cm]{figure/initialdisk.eps}
+  %\includegraphics[width=5.8cm,height=5.8cm]{figure/initialdisk.eps}
+  \includegraphics[height=5.8cm]{figure/initialdisk.eps}
 \label{initial}
 \end{subfigure}
 \begin{subfigure}
-\includegraphics[width=5.8cm,height=5.8cm]{figure/damage.eps}
+  %\includegraphics[width=5.8cm,height=5.8cm]{figure/damage.eps}
+  \includegraphics[height=5.8cm]{figure/damage.eps}
 \label{damage}
 \end{subfigure}
 \caption{The initial appearance of the disk (Left) and the data results after hitting the indenter onto the disk (Right).}
+\label{fig:2}
 \end{figure}
 
-Using the above-mentioned setup in LAMMPS, we can see the result obtained by simulation using LAMMPS tool in Fig. 2. The dump file after running the MD simulation is converted to an EnSight data format with the pizza.py toolkit \cite{Ref16} and Paraview is used for visualization in Fig. 2 \cite{Ref17}. The left figure is the initial model of the target disk, and the right is the figure after the simulation results. The symmetry solution represents the right side in the figure because of the perfect lattice is used, and the perfectly spherical indenter impacted the geometric center of the target. In this study, the use of asymmetric crack patterns could be better data for real life applications but focused primarily on crack patterns with symmetry, However, as the position of the hitting point change, various crack patterns can be confirmed, so that the data for machine learning is sufficient.
+%%Using the LAMMPS setup described above, we can see the results obtained by simulation using LAMMPS tool in Fig. 2.
+A collection of LAMMPS simulation results using the setup described above are illustrated in Fig.~\ref{fig:2}.
+%%
+The dump file after running the MD simulation is changed to the EnSight data format with the pizza.py toolkit \cite{Ref19} and Paraview is used for data visualization as shown in Fig.~\ref{fig:2} \cite{Ref20}.
+%%
+The figure to the left shows the initial model of the target disk, and the figure to the right shows the same disk at the end of the simulation.
+%%
+{\rd{The symmetry solution represents the right side in the figure because of the perfect lattice is used, and the perfectly spherical indenter impacted the geometric center of the target.}}
+%%
+In this study, the use of asymmetric crack patterns could provide better data for real world applications
+{\rd{but focused primarily on crack patterns with symmetry, However, as the position of the hitting point change, various crack patterns can be confirmed, so that the data for machine learning is sufficient.}}
 %4
 \section{Results and Discussion}
 \label{sec:4}
@@ -310,18 +384,22 @@ Using the above-mentioned setup in LAMMPS, we can see the result obtained by sim
 \label{fig:3}       
 \end{figure}
 
-In this study, data obtained from peridynamics is used to predict the forward and inverse problems through the machine learning algorithm and the diagram is expressed in Fig. 3. For the forward problem, the crack patterns of the target disk are predicted due to the hitting locations. Conversely, images of the crack patterns are used in the inverse problem to predict the velocity, radius, hitting locations of the indenter and angle of the indenter.
+In this study, data obtained from peridynamics simulations is used to predict solutions for forward and inverse problems using a machine learning algorithm as illustrated in the diagram presented in Fig.~\ref{fig:3}.
+%%
+For the forward problem, the crack patterns of the target disk are predicted based on the known hitting location of the indenter.
+%%
+Conversely, for the inverse problem, crack patterns are used to predict the velocity, radius, hitting angle, and hitting location of the indenter.
 
 %4.1
 \subsection{Dataset creation for the forward problem}
 \label{forward_data}
 
-The dataset for the forward problem has been created using the LAMPPS software's peridynamics package.  Simulations corresponding to  25,250 indenter hit locations were carried out to construct the final dataset.  To avoid the introduction of potentially unrealistic artifacts into the dataset, due to issues with the peridynamics simulations near the boundary, the selected hitting locations have been restricted to the inner $1/3$ of the disk.
+The dataset for the forward problem has been created using the LAMPPS peridynamics package.  Simulations corresponding to  25,250 indenter hit locations were carried out to construct the final dataset.  To avoid the introduction of potentially unrealistic artifacts in the dataset due to inaccuracies of the peridynamics model near the boundary, the selected hitting locations have been restricted to the inner $1/3$ of the target disk.
 
 In order to successfully train the network for the forward problem, it was necessary to design a loss function which converted the raw LAMMPS damage data into a format which is compatible with the deep learning framework and array/tensor-based format of the TensorFlow network implementation.  This conversion was performed most naturally by bucketizing the atoms into a uniform grid of resolution $64 \times 64$.  The average damage of the atoms contained in each bucket/bin of the grid was calculated and used to create the target outputs for the network.  It was also necessary to account for atoms which had been substantially dislocated by a direct impact with the indenter and had left some bins at the disk's interior empty.  These interior bins were assigned a full damage value of $1.0$ to indicate that the atom which had originally occupied the space was displaced by the indenter.  This was achieved by storing a copy of the LAMMPS data before the indenter strikes to serve as a template which indicates where the atom damages should be calculated.
 
 
-\subsection{Network structure for the forward problem}
+\subsubsection{Network structure for the forward problem}
 \label{forward_network}
 
 To accomplish this task, we propose the use of a deep neural network which consists of several dense, fully-connected network layers followed by a sequence of transpose convolutional layers.  In this framework, the input coordinates are first processed by the initial dense network layers to construct features which are reshaped into a collection of coarse $8 \times 8$ resolution features.  These coarse features are then passed to the transpose convolutional layers to be upsampled into a single, higher resolution $64 \times 64$ damage pattern prediction.  The precise network structure used is shown in figure \ref{fig:forward}.  This network was implemented using the TensorFlow software library and written in Python.
@@ -357,7 +435,7 @@ The model was trained using the standard ADAM optimization algorithm and backpro
 
 
 
-\subsection{Forward problem results and discussion}
+\subsubsection{Forward problem results and discussion}
 \label{forward_results}
 
 \begin{figure}
@@ -464,7 +542,62 @@ Each of these clusters has a maximum distance of less than $0.00031$mm on a disk
 \subsection{Datasets of the inverse problem}
 \label{subsec1}
 
-Clarified input and output data set are required to apply the supervised machine learning in this experiment. Various types of data are available to be used as input data. Moreover, the features of the input data are determined, and its usually expressed as the vector form. For the data set, image forms of damage data, which is simulated by LAMMPS, are used as an input data set. Let the damage data be $\mathcal{X}$=\{$\mathcal{X}_1$,$\mathcal{X}_2$,...,$\mathcal{X}_N$\} as an input data when N $\in$ R. For the supervised machine learning, labels which classify and represent the input data are required as well. Consider the label set is $\omega$=\{$\omega_1$,$\omega_2$,...,$\omega_M$\} in case M $\in$ R, and each label is assigned to the corresponding input data $\mathcal{X}$. The labeled data set which is called the training pair is $\rho$=($\mathcal{X}_i$,$\omega_i$). This pair represents the damage set with corresponding labels. In this research, 70\% of the input data and 10\% of the input data set are used for the training set and the test set respectively and 30\% of the training data, is used for the validation set. This labeled training set is sent to a supervised learning algorithm which is chosen and designed for making a prediction model. The goal of the supervised machine learning algorithm is to efficiently classify the training set according to the corresponding labels. There are a few supervised learning algorithms which are used such as decision trees, Naive Bayes, Artificial Neural Network (ANNs), etc \cite{Ref18}. In this paper, Convolutional Neural Network (CNNs), is used as the supervised learning algorithm. Through the learning algorithm, the labeled training set and validation set are used as an input of a function which allows the learning algorithm to classify the relationship between the unlabeled input data $\mathcal{X}$ and the corresponding labels $\omega$. Thus, it generates a function that is $\mathcal{F}$:$\mathcal{X}_i$ $\rightarrow$ $\omega_i$. Moreover, through the validation set which is sorted from the input data, the function is optimized as a classifier, and it makes an accurate prediction model. Lastly, in order to estimate the prediction model, a new input data set is used as a test set. In the same way as the training set, the corresponding labels is assigned to the new test set. This test set is sent to the prediction model, and it finally shows the accuracy of the prediction model by predicting the assigned labels of the test set. In this process, the labels of the test set are not used for training but for prediction. Thus, the prediction model predicts the corresponding labels of each component of the data set, and the predicted labels are compared with the desired labels of the test pairs. In this article, the result is displayed as a success rate of prediction of the test set, and it shows the accuracy of this supervised learning. An inverse problem is a mathematical way to predict the parameters through the measured and observed data. In this study, the crack pattern on a disk by an indenter was supposed to be analyzed depending on the different value of the parameters of the indenter through the way of the inverse problem. The purpose of this section is using the concept of the inverse problem for the crack pattern to predict the velocity, radius, angle and hitting points of the indenter.
+{\rd{Labeled input and output data are required to apply the supervised machine learning algorithm in this experiment.}}
+%%
+{\rd{Various types of data are available to be used as input data.}}
+%%
+{\rd{Moreover, the features of the input data are determined, and it is usually expressed in vector form.}}
+%%
+%For the data set, image forms of damage data, which is simulated by LAMMPS, are used as an input data set.
+The input data for the inverse problem consists of damage pattern arrays obtained from LAMMPS simulations.
+%%
+{\rd{Let the damage data be}} $\mathcal{X}$=\{$\mathcal{X}_1$,$\mathcal{X}_2$,...,$\mathcal{X}_N$\} as an input data when  $N\in\mathbb{N}$.
+%%
+ For supervised machine learning, labels which classify and represent the input data are required as well.
+%%
+ {\rd{Consider the label set $\omega$=\{$\omega_1$,$\omega_2$,...,$\omega_M$\} in case $M\in\mathbb{N}$, and each label is assigned to the corresponding input data $\mathcal{X}$.}}
+%%
+ {\rd{The labeled data set which is called the training pair is $\rho$=($\mathcal{X}_i$,$\omega_i$).}}
+%%
+ This pair represents the damage set with corresponding labels.
+%%
+ % In this work, 70\% of the input data and 10\% of the input data set are used for the training set and the test set respectively and 30\% of the training data, is used for the validation set.
+  In this work, 70\% of the data set examples are used for training, 30\% of the data is used for validation, and 10\% is used for testing the model {\rd{[should add up to 100\%]}}.
+%%
+ The labeled training set is used in the supervised learning algorithm which {\rd{is chosen and designed for making a prediction model.}}
+%%
+ The goal of the supervised machine learning algorithm is to efficiently {\rd{classify the training set according to the corresponding labels.}}
+%%
+ There are a few supervised learning algorithms which are used such as decision trees, Naive Bayes, Artificial Neural Network (ANNs), etc \cite{Ref21}.
+%%
+ In this paper, Convolutional Neural Networks (CNNs) are used as the supervised learning algorithm.
+%%
+ {\rd{Through the learning algorithm, the labeled training set and validation set are used as an input of a function which allows the learning algorithm to classify the relationship between the unlabeled input data $\mathcal{X}$ and the corresponding labels $\omega$.}}
+%%
+ Thus, it generates a function $\mathcal{F}$:$\mathcal{X}_i$ $\rightarrow$ $\omega_i$ designed to map damage patterns to the collection of indenter parameters which result in similar pattern.
+%%
+{\rd{ Moreover, through the validation set which is sorted from the input data, the function is optimized as a classifier, and it makes an accurate prediction model.}}
+%%
+ Lastly, in order to evaluate the prediction model, a separate set of data, referred to as the test set, is used to assess the accuracy of the model.
+%%
+{\rd{ In the same way as the training set, the corresponding labels is assigned to the new test set.}}
+%%
+{\rd{ This test set is sent to the prediction model, and it finally shows the accuracy of the prediction model by predicting the assigned labels of the test set.}}
+%%
+%In this process, the labels of the test set are not used for training but for prediction.
+Since the data from the test set is never used during training, the accuracy of the model predictions on this set provide a measure of how well the model generalizes beyond the data that it has already seen.
+%%
+ Thus, the prediction model predicts the corresponding labels of each component of the data set, and the predicted labels are compared with the desired labels of the test pairs.
+%%
+ The success rate of prediction on the test set is used as the primary evaluation measure, and it shows the accuracy of the model resulting from the supervised learning algorithm.
+%%
+{\rd{[Needs a transition.]}}
+%%
+An inverse problem is a mathematical way to predict the parameters through the measured and observed data.
+%%
+{\rd{ In this work, the crack pattern on a disk by an indenter was supposed to be analyzed depending on the different value of the parameters of the indenter through the way of the inverse problem.}}
+%%
+{\rd{ The purpose of this section is using the concept of the inverse problem for the crack pattern to predict the velocity, radius, angle and hitting points of the indenter.}}
 %4.2.1
 \subsubsection{Preparation of data}
 \label{subsubsec1}
@@ -494,7 +627,23 @@ Mode8 & r=0.008m, v=100.1m/s, 45$^{\circ}$ \\
 \hline
 \end{tabular}
 \end{table}
-Matconvnet \cite{Ref19} based on MATLAB code was applied to the inverse problem using numpy array as input image data. Prior to considering the results, focusing on the input image data using LAMMPS, we can classify into 8 modes changing the 4 variables (the radius of the indenter, the velocity of the indenter, the angle of the indenter, and the hitting location of the disk) and obtained 7,200 training data sets and 1,200 test data sets. The mode according to the variation of the variable is set as a combination of the velocity, angle, radius of the indenter and the hitting location of the disk and is shown in Table. 1. Training data set and test data set are distinguished to apply input image data set to machine learning algorithm. The image size of the training data set is 128 pixels by 128 pixels and the number is 7200. 2,160 (30\% of 7,200 training data set) were designated as a validation set. In this way, the image size of the test data set is 128 pixels by 128 pixels, and the number of images is 1200. 360 (30\% of 1,200 test data set) were designated as a validation set in the test data set.
+%Matconvnet \cite{Ref22} based on MATLAB code was applied to the inverse problem using numpy array as input image data.
+The MATLAB toolbox Matconvnet~\cite{Ref22} has been applied to the inverse problem using damage pattern arrays as input data.
+%%
+{\rd{ Prior to considering the results,}} focusing on the input data using LAMMPS, {\rd{we can classify into 8 modes changing the 4 variables}} (the radius of the indenter, the velocity of the indenter, the angle of the indenter, and the hitting location of the disk) and obtained 7,200 training examples and 1,200 test examples {\rd{[what about validation?]}}.
+%%
+ The mode according to the variation of the variable is set as a combination of the velocity, angle, radius of the indenter and the hitting location of the disk and is shown in Table. 2.
+%%
+ Training data set and test data set are distinguished to apply input image data set to machine learning algorithm.
+%%
+ The array size of the inputs has been selected to be 128 pixels by 128 pixels. % and the number is 7200.
+%%
+ 2,160 (30\% of 7,200 training data set) were designated as a validation set.
+ {\rd{[The validation set is supposed to be separate from the training set; is this the case?]}}
+%%
+ {\rd{In this way, the image size of the test data set is 128 pixels by 128 pixels, and the number of images is 1200.}}
+%%
+ {\rd{360 (30\% of 1,200 test data set) were designated as a validation set in the test data set.}}
 %4.2.2
 \subsubsection{Reference annotation}
 \label{subsubsec2}
@@ -504,7 +653,7 @@ Matconvnet \cite{Ref19} based on MATLAB code was applied to the inverse problem 
 \caption{Structure of data in the .mat file}
 \label{fig:4}       
 \end{figure}
-The training data set and the test data set are made into a .mat file that can be applied to Matconvnet and its structure is shown in Fig. 4. The structure of the data in the .mat file is largely divided into `Images' and `Meta'. There are `Labels', `Set' and `Data' classes in the `Images' class. `Labels' displays labels on images of input data sets. Labels were displayed randomly from 1 to 8 since data has 8modes. In the set class, training data, test data, and validation data are indicated by 1, 2, and 3, respectively. In the `Data' class, the data obtained from the LAMMPS is converted to a numpy array and expresses it as a 4-D single matrix. Finally, there are `Set' and `Classes' in the `Meta' class. The `Set' contains the words `train', `test' and `val' which are related to the `Images' class and indicate that the 1 2 3 in the set of images class is training data, test data and validation data respectively. The `Classes' in the `Meta' specifies a class from 1 to 8 due to this inverse problem has a mode of 8.
+The training data set and the test data set are made into a .mat file that can be applied to Matconvnet and its structure is shown in Fig. 7. The structure of the data in the .mat file is largely divided into `Images' and `Meta'. There are `Labels', `Set' and `Data' classes in the `Images' class. `Labels' displays labels on images of input data sets. Labels were displayed randomly from 1 to 8 since data has 8modes. In the set class, training data, test data, and validation data are indicated by 1, 2, and 3, respectively. In the `Data' class, the data obtained from the LAMMPS is converted to a numpy array and expresses it as a 4-D single matrix. Finally, there are `Set' and `Classes' in the `Meta' class. The `Set' contains the words `train', `test' and `val' which are related to the `Images' class and indicate that the 1 2 3 in the set of images class is training data, test data and validation data respectively. The `Classes' in the `Meta' specifies a class from 1 to 8 due to this inverse problem has a mode of 8.
 \begin{figure}
 \includegraphics[width=12cm,height=5cm]{figure/cnn.eps}
 \caption{Architecture of convolution neural networks (CNNs) for inverse problem and rectification (ReLU) and downsampling layers (MaxPooling) represented in section 4.1.4. This figure shows the data size, kernel size and the numbers of the output feature and produced by each filter layers.}
@@ -513,29 +662,47 @@ The training data set and the test data set are made into a .mat file that can b
 %4.2.3
 \subsubsection{Convolutional neural network for inverse problem}
 \label{subsubsec3}
-Deep learning is a subset of AI and machine learning that can bring state-of-the-art technology and accuracy in problems such as object detection, text generation, image recognition and etc. and using existing human knowledge in annotated data, various cognitive and inferential tasks can be performed \cite{Ref20,Ref21,Ref22}. Convolutional neural networks are variously used to solve the computer vision problems such as image classification and detection of the object. These convolutional neural networks are composed of several layers which can be mediated by connections between input and output layers. In this research for damage analysis using machine learning algorithm, a similar structure of AlexNet are chosen \cite{Ref23}. The CNNs adjusts two steps through the neural layers such as feature extraction and feature classification. First, feature extraction takes a color-scale damage image stored as a 2D array of size $N_{row}$ $\times$ $N_{col}$ for input data and convert to a vector of size 8 $\times$ 8 $\times$ 100. Second, the feature vector is converted to a classification vector of size 1 $\times$ $N_{c}$, where $N_{c}$ is the number of classification categories. This paper considers eight categories from mode 1 to mode 8.
+Deep learning is a subset of AI and machine learning {\rd{that can bring state-of-the-art technology and accuracy}} in problems such as object detection, text generation, and image recognition.
+%%
+{\rd{Using existing human knowledge in annotated data}}, various cognitive and inferential tasks can be performed \cite{Ref23,Ref24,Ref25}.
+%%
+Convolutional neural networks are widely used to solve computer vision problems such as classification of images and object detection.
+%%
+These convolutional neural networks consist of several layers which can be tuned through the connection weights between input and output layers.
+%%
+In this work for damage analysis using machine learning, a similar structure of AlexNet are chosen \cite{Ref26}.
+%%
+{\rd{The CNNs adjusts two steps through the neural layers such as feature extraction and feature classification.}}
+%%
+First, feature extraction uses a 2D damage array of size $N_{row}$ $\times$ $N_{col}$ for input data and produces a vector of size 8 $\times$ 8 $\times$ 100.
+%%
+Second, the feature vector is converted to a classification vector of size 1 $\times$ $N_{c}$, where $N_{c}$ is the number of classification categories.
+%%
+{\rd{This work accounts for eight categories from mode 1 to mode 8.}}
 
 %4.2.3
 \subsubsection{Feature extraction and classification}
 \label{subsubsec3}
-The purpose of image extraction and classification is to create a 1 $\times$ $f_c$ feature vector in relation to the input data, which is related to the 8modes we want to classify. This vector is generated from the input image by applying successive filters and the filters are 1) Maxpooling layer, 2) ReLU layer and 3) SoftMax layer that is  described as follows.
+The purpose of image extraction and classification is to create a 1 $\times$ $f_c$ feature vector in relation to the input data, which is related to the 8 modes used for classification.
+%%
+The feature vector is generated from the input training data by applying successive filters and the filters are 1) Maxpooling layer, 2) ReLU layer and 3) SoftMax layer; each of the three types of network layers are described below.
 \\
 \\
-1) Maxpooling layer \cite{Ref24} is a sample-based discretization process. The objective is to down-sample an input representation, reducing its dimensionality, the computational load, and the memory usage. If we assume the input image $x$ is a square image of size $N_{col}$ $\times$ $N_{row}$, and a = 2, then the output image y of the pooling operation is of size [$N_{col}$/a] $\times$ [$N_{row}$/a]. In our research, the downsampling rate is set to a = 2,
-the 64 pixels by 64 pixels image becomes 32 pixels by 32 pixels and 16 pixels by 16 pixels image becomes 8 pixels by 8 pixels.
+1) Maxpooling layer \cite{Ref27} is a sample-based discretization process. The objective is that  downsamples the input images and reduce its size, the computational load, and the memory usage. If the input image $x$ is a square image of size $N_{col}$ $\times$ $N_{row}$, and $a = 2$, then the output image y of the pooling operation is of size [$N_{col}$/a] $\times$ [$N_{row}$/a]. In our research, the downsampling rate is set to $a = 2$,
+the 64 pixels by 64 pixels array becomes 32 pixels by 32 pixels and 16 pixels by 16 pixels image becomes 8 pixels by 8 pixels.
 \\
 \\
-2) The rectified linear unit layer \cite{Ref25} applies an activation function defined as the positive part of its argument and this activation function is shown in Eq.(11).
+2) The rectified linear unit layer \cite{Ref28} applies an activation function defined as the positive part of its argument and this activation function is shown in Eq.(11).
 
 \begin{equation}
 ReLU(x) = x^{+} = \max(0,x) 
 \end{equation}
 
 where $x$ is the input data to a neuron. A ReLU performs a threshold operation
-to each element of the input where any value less than zero is set to zero. ReLU improves neural network is by speeding up training.
+to each element of the input where any value less than zero is set to zero. ReLU improves neural network is by speeding up training due to the simplicity of evaluating the ReLU activation.
 \\
 \\
-3) SoftMax layer \cite{Ref26} is often used in the final layer of a neural network-based classifier.  It takes a vector of arbitrary real-valued scores (in z) and squashes it to a vector of values between zero and one that sum to one.
+3) SoftMax layer \cite{Ref29} is often used in the final layer of a neural network-based classifier.  It takes a vector of arbitrary real-valued scores (in z) and reduces it to a vector of values between zero and one that sum to one.
 
 \begin{equation}
 z^{[L]}=W^{[L]}a^{[L-1]}+b^{[L]} 
@@ -557,7 +724,30 @@ output a is going to be the vector t but normalized to sum to 1.
 \subsubsection{Training and testing using CNNs and prediction accuracy}
 \label{subsubsec3}
 
-Data was trained by Matconvnet based on MATLAB. Convolution neural networks (CNNs) was used for training and its architecture is shown in Fig 5. Our fully convolutional network is composed of two convolutional layers followed by a max pool layer and rectified linear layer (ReLU) and followed by a fully-connected layer with softmax layer which is used in the final layer of convolution neural network-based classifier. In the first convolutional layer, the “weights” are the filters being learned and initialized with random numbers from a Gaussian distribution. The filters are 2 by 2 spatial resolution with 1 filter depth and a number of kernels are 200. The next layer is a max pooling layer which takes 2 by 2 sliding window with a stride of 2. The spatial resolution will be decreased due to the stride 2 in max pooling layer. The next layer is the rectified linear unit (ReLU). It promotes the convergence of stochastic gradient descent through the negative value becomes zero. By doing this activation, the enhancement of the speed of convergence can be seen when training the data. 
+The model for the inverse problem has been trained using the MATLAB toolbox Matconvnet.
+%Data was trained by Matconvnet based on MATLAB.
+%%
+The prediction model has been implemented as a convolution neural network (CNN) with architecture as shown in Fig 8.
+%%
+The proposed convolutional network is composed of two convolutional layers and a fully-connected layer.
+%%
+Each convolutional layer is followed by a max pooling layer and rectified linear unit layer (ReLU).
+%%
+After the two convolution layers, a fully-connected layer with softmax activation is used in the final layer of convolution neural network-based classifier.
+%%
+In the first convolutional layer, the “weights” are the filters being learned and initialized with random numbers from a Gaussian distribution.
+%%
+The filters are 2 by 2 spatial resolution with 1 filter depth and a number of kernels are 200.
+%%
+The next layer is a max pooling layer which takes 2 by 2 sliding window with a stride of 2.
+%%
+The spatial resolution will be decreased due to the stride 2 in max pooling layer.
+%%
+The next layer is the rectified linear unit (ReLU).
+%%
+{\rd{It promotes the convergence of stochastic gradient descent through the negative value becomes zero.}}
+%%
+{\rd{By doing this activation, the enhancement of the speed of convergence can be seen when training the data. }}
 \label{subsubsec3}
 \begin{figure}
 \centering
@@ -565,8 +755,18 @@ Data was trained by Matconvnet based on MATLAB. Convolution neural networks (CNN
 \caption{Objective and error plots during the training.}
 \label{fig:5}       
 \end{figure}
-The last layer is fully-connected layer have full connections with the activation functions in the previous convolution layers. In this study, the output of this layer must be 1x1 spatial resolution and since the size of the filter should be classified as 8 modes, it should be unconditionally 8. Using the CNNs mentioned above with the 7200 training data and the 1200 test data, the learning rate is 0.001, the batch size is 20, and the epoch is 25 for the training. 
-During the data training of the CNNs, each successful epoch produces up to the plots (objective and error plots). In this convolutional neural network, MatConvNet minimizes the objective which represents the loss function and y axis of energy represents to measure the magnitude of loss. During the training, several statistics are measured after every batch. In the objective and the error plots, the training error is depicted by the blue line and the validation error is represented by an orange dotted line. The error graph should show similarity to the objective graph and our network achieved 0.044 validation error. Lastly, the results are shown in Table. 2. The left side shows the number of the 10 test images and the marked label among 1200 test images, and the right side shows the prediction based on the training results.
+The last layer is fully-connected layer have full connections with the activation functions in the previous convolution layers.
+%%
+{\rd{In this study, the final layer should be 1x1 spatial resolution and since the size of the filter should be classified as 8 modes, it should be unconditionally 8.}}
+%%%
+Using the CNNs mentioned above with the 7200 training data and the 1200 test data, the learning rate is 0.001, the batch size is 20, and the epoch is 25 for the training. 
+During the training procedure for the CNN, {\rd{each successful epoch produces up to the plots (objective and error plots).}}
+%%
+In this convolutional neural network, MatConvNet minimizes the objective which represents the loss function and y axis of energy represents to measure the magnitude of loss.
+%%
+During the training, several statistics are measured after every batch.
+%%
+In the objective and the error plots, the training error is depicted by the blue line and the validation error is represented by an orange dotted line. The error graph should show similarity to the objective graph and our network achieved 0.044 validation error. Lastly, the results are shown in Table. 3. The left side shows the number of the 10 test images and the marked label among 1200 test images, and the right side shows the prediction based on the training results.
 \begin{table}[h!]
 \centering
 \caption{CNNs predictions results compared to the test image data.}
@@ -589,7 +789,7 @@ Test image 10 : 6 (Mode) & 6 (Mode) \\
 \hline
 \end{tabular}
 \end{table}
-As we can see in Table. 2, labeled test images and CNNs prediction results are quite match the results each other. To evaluate the accuracy of training data obtained from CNNs, the success rate is defined as
+As we can see in Table. 3, labeled test images and CNNs prediction results are quite match the results each other. To evaluate the accuracy of training data obtained from CNNs, the success rate is defined as
 \begin{equation} 
 %\label{eqn3}
 \frac{number\ of\ correct\ test\ images}{total\ number\ of\ test\ images} \times 100\%
@@ -602,12 +802,12 @@ The prediction results of the inverse problem using the training data showed a s
 
 We have used the peridynamic-based MD simulation to change the hit locations of the disk, impacting the disk and forming a distinct crack pattern. Based on the crack pattern data obtained from MD simulation, both the forward problem and inverse problem were approximated by convolutional neural networks.  The results for the forward problem were shown to provide accurately predicted damage patterns both quantitatively and qualitatively.  Though the patterns predicted by the network tend to be more symmetric and smooth in comparison with the MD simulation results, it has been seen that this is likely a reflection of low forward-stability in the fine details of the crack patterns for the forward problem.  Although the predictions omit some small-scale features in the crack patterns, the overall structure of the cracks is shown to be predicted accurately and in a fraction of the time required by direct MD simulations (with network predictions computed over $1,500$ times faster).
 
-For the inverse problem, we used the data of the crack pattern obtained by changing the radius, velocity, angle of the indenter, and the hitting position of the disk. In order to predict the mode, we labeled the data and predict the data by CNNs and accurately predict the most cases from MODE1 to MODE8. By implementing CNNs on the Inverse problem, we have shown the ability to identify the MODE through a learning process that extracts related functions from the raw images through the convolution layer, maxpooling layer, and ReLU layer in the feature extraction. Using these functions, data could be divided into MODE1 to MODE8 through the fully connected layer. The confidence level of the classification can be confirmed from the class probability vector generated by the softmax layer existing in the feature classification. 
+For the inverse problem, we used the data of the crack pattern obtained by changing the radius, velocity, angle of the indenter, and the hitting position of the disk. In order to predict the mode, we labeled the data and predict the data by CNNs and accurately predict the most cases from MODE1 to MODE8. By implementing CNNs on the inverse problem, we have shown the ability to identify the MODE through the process of learning via CNNs that extracts related functions from the input images by way of the convolution layer, maxpooling layer, and ReLU layer in the feature extraction. Using these functions, data could be divided into MODE1 to MODE8 through the fully connected layer. The reliability of the classification can be ascertained from the class probability vector generated by the softmax layer existing in the feature classification. 
 
 With regard to the forward problem, future work will be directed toward identifying the causes of the noisy simulation data and apparent low forward-stability observed in the dataset.  Experiments simulating differing material properties, e.g. using other pair-styles in LAMMPS, will also be of interest to assess the overall generality of the proposed neural network training procedure.  In addition, we are very interested in extending our work to simulations of higher complexity (e.g. to a simulation which requires hours to conduct) to test the limits of the representational/modeling potential of the convolutional networks used in this work.
 
 %%
-For the inverse problem, we will have to do more complex crack pattern studies by applying more variables to the MD simulation data. For instance, in addition to impacting multiple indenters on a disk, it is necessary to study the shape of the crack pattern by varying the thickness or material of the impacted object or the interaction between the cracks generated by the multiple indenters. Also, since the accuracy of the CNNs classification greatly depends on the quality of the annotated data used to train the network, it will improve the accuracy of CNNs classification by improving the size change or resolution of the data. 
+For the inverse problem, we will have to do more complex crack pattern studies by applying more variables to the MD simulation data by Peridigm \cite{Ref30}. For instance, in addition to impacting multiple indenters on a disk, it is necessary to study the shape of the crack pattern by varying the thickness or material of the impacted object or the interaction between the cracks generated by the multiple indenters. Also, since the accuracy of the CNNs classification greatly depends on the quality and resolution of the labeled train data for training the networks, it will improve the accuracy of CNNs classification by improving the size change or resolution of the data. 
 
 
 \section{Data and Code}
@@ -727,34 +927,48 @@ Lall, P., Shantaram, S., \& Panchagade, D. (2010). Peridynamic-models using fini
 Ahadi, Hansson, \& Melin. (2016). Indentation of thin copper film using molecular dynamics and peridynamics. Procedia Structural Integrity, 2, 1343-1350.
 
 \bibitem{Ref15}
-Plimpton, S. (1995). Fast Parallel Algorithms for Short-Range Molecular Dynamics. Journal of Computational Physics, 117(1), 1-19.
+Parks, M. L. (2016). Nonlocal Models and Peridynamics (No. SAND2016-0673PE). Sandia National Lab.(SNL-NM), Albuquerque, NM (United States).
 
 \bibitem{Ref16}
-Kitware Inc., ParaView web page. http://www.paraview.org/.
+Plimpton, S. (1995). Fast Parallel Algorithms for Short-Range Molecular Dynamics. Journal of Computational Physics, 117(1), 1-19.
 
 \bibitem{Ref17}
-S. J. Plimpton, Pizza.py http://www.cs.sandia.gov/~sjplimp/pizza.html.
+Parks, M. L. (2016). Nonlocal Models and Peridynamics (No. SAND2016-0673PE). Sandia National Lab.(SNL-NM), Albuquerque, NM (United States).
 
 \bibitem{Ref18}
-S. Kotsiantis, “Supervised learning: A review of classification techniques,” Informatica, vol. 31, pp. 249–268, 2007.
+Parks, M. L., Seleson, P., Plimpton, S. J., Silling, S. A., \& Lehoucq, R. B. (2011). Peridynamics with lammps: A user guide, v0. 3 beta. Sandia Report (2011–8253).
 
 \bibitem{Ref19}
-Vedaldi, Andrea, and Karel Lenc. "MatConvNet - Convolutional Neural Networks for MATLAB." (2014). Web.
+S. J. Plimpton, Pizza.py http://www.cs.sandia.gov/~sjplimp/pizza.html.
+
 \bibitem{Ref20}
-Goodfellow, I., Bengio, Y., Courville, A., \& Bengio, Y. (2016). Deep learning (Vol. 1). Cambridge: MIT press.
+Kitware Inc., ParaView web page. http://www.paraview.org/.
+
 
 \bibitem{Ref21}
-Géron, A. (2017). Hands-on machine learning with Scikit-Learn and TensorFlow: concepts, tools, and techniques to build intelligent systems. " O'Reilly Media, Inc.".
+S. Kotsiantis, “Supervised learning: A review of classification techniques,” Informatica, vol. 31, pp. 249–268, 2007.
+
 \bibitem{Ref22}
-LeCun, Y., Bengio, Y., \& Hinton, G. (2015). Deep learning. nature, 521(7553), 436.
+Vedaldi, Andrea, and Karel Lenc. "MatConvNet - Convolutional Neural Networks for MATLAB." (2014). Web.
+
 \bibitem{Ref23}
-Krizhevsky, A., Sutskever, I., \& Hinton, G. E. (2012). Imagenet classification with deep convolutional neural networks. In Advances in neural information processing systems (pp. 1097-1105).
+Goodfellow, I., Bengio, Y., Courville, A., \& Bengio, Y. (2016). Deep learning (Vol. 1). Cambridge: MIT press.
+
 \bibitem{Ref24}
-Riesenhuber, M., & Poggio, T. (1999). Hierarchical models of object recognition in cortex. Nature neuroscience, 2(11), 1019.
+Géron, A. (2017). Hands-on machine learning with Scikit-Learn and TensorFlow: concepts, tools, and techniques to build intelligent systems. " O'Reilly Media, Inc.".
 \bibitem{Ref25}
-Krizhevsky, A., Sutskever, I., \& Hinton, G. E. (2012). Imagenet classification with deep convolutional neural networks. In Advances in neural information processing systems (pp. 1097-1105).
+LeCun, Y., Bengio, Y., \& Hinton, G. (2015). Deep learning. nature, 521(7553), 436.
 \bibitem{Ref26}
+Krizhevsky, A., Sutskever, I., \& Hinton, G. E. (2012). Imagenet classification with deep convolutional neural networks. In Advances in neural information processing systems (pp. 1097-1105).
+\bibitem{Ref27}
+Riesenhuber, M., \& Poggio, T. (1999). Hierarchical models of object recognition in cortex. Nature neuroscience, 2(11), 1019.
+\bibitem{Ref28}
+Krizhevsky, A., Sutskever, I., \& Hinton, G. E. (2012). Imagenet classification with deep convolutional neural networks. In Advances in neural information processing systems (pp. 1097-1105).
+\bibitem{Ref29}
 Nasrabadi, N. M. (2007). Pattern recognition and machine learning. Journal of electronic imaging, 16(4), 049901.
+
+\bibitem{Ref30}
+Parks, M. L., Littlewood, D. J., Mitchell, J. A., \& Silling, S. A. (2012). Peridigm Users’ Guide v1. 0.0. SAND Report, 7800.
 
 \end{thebibliography}
 
