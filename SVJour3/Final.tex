@@ -143,9 +143,9 @@
 %Representatively, various types of structures and material behaviors have been studied through the finite element analysis (FEM). However, there are inherent errors in the study through the FEM. In the FEM, only the approximate solution can be obtained. Also, the results of analysis tend to depend on the mesh, and the mistakes by the researchers can be fatal to derive the results.
 %%
 The finite element method (FEM) is
-{\rd{performed on the basis of the partial differential equations}},
-but the partial derivatives are not present on the surface of the crack,
-{\rd{so it is not enough to get accurate results}}.
+founded on the basis of partial differential equations;
+since partial derivatives may not always be defined on surfaces with cracks, however,
+the FEM model cannot be used to obtain accurate results for crack pattern analysis.
 %%
 %Therefore, i
 In order to compensate for these drawbacks, we conducted a crack pattern study using peridynamics.
@@ -162,6 +162,8 @@ Peridynamics can be of particular use in understanding the damage in membranes a
 %%
 Peridynamics can be applied not only to damage studies, but also to technologically important areas such as prediction of viscoelastic materials \cite{Ref10}, piezo-resistive response of carbon nanotube nanocomposites \cite{Ref11}, phase transformation in zirconium dioxide \cite{Ref12}, shock and vibration \cite{Ref13}, and indentation of thin copper film \cite{Ref14}.
 %%
+
+
 Though the peridynamics framework has proven to be a powerful and widely applicable tool, the computational demand can become burdensome very quickly as the scales of the simulations are increased.
 %%
 In order to decrease the computation time required to run these simulations while maintaining a high level of accuracy, we propose a machine learning approach which utilizes recent design and hardware advances that have greatly improved the performance of artificial neural networks (ANNs).
@@ -185,7 +187,9 @@ By combining the accuracy of the peridynamics model with the computational speed
 \label{fig:1}       % Give a unique label
 \end{figure}
 
-Peridynamics is the non-local extension of classical continuum mechanics \cite{Ref15}. The model structure of peridynamics is the same as an MD model {\rd{and in LAMMPS, SI units (m, kg, sec etc.) can be used for simulations}}.
+Peridynamics is the non-local extension of classical continuum mechanics \cite{Ref15}. The model structure of peridynamics is essentially the same as an MD model, and simulations can be conducted in LAMMPS~\cite{Ref16} using the
+standard SI units (m, kg, sec etc.).
+%{\rd{and in LAMMPS, SI units (m, kg, sec etc.) can be used for simulations}}.
 %Compared with FEM (Finite Element Method), FEM can only acquire approximate solutions and the user's mistake in obtaining a solution can be incredibly deadly, and the results can vary depending on how the mesh is set.
 %%
 %Finally,
@@ -204,23 +208,27 @@ Next, let us look at the governing equations of the peridynamics model \cite{Ref
 %Fig. 1 is plotted to represent the composition of the peridynamics model.
 Fig.~\ref{fig:1} gives an overview of the composition of the peridynamics model.
 %%
-As you can see in Fig.~\ref{fig:1}, $\mathcal{F}_x$ (Family of $x$) exists in the body, and  $x$ and ${x'}$ represent arbitrary points inside of the body. %%
-{\rd{$x$ and ${x'}$ are the points given in the reference configuration}}.
+For each point $x$ in the reference configuration, we define the family $\mathcal{F}_x$ to consist of all points $x'$ in the body which are within the horizon $\delta$ boundary of $x$.
+In peridynamics theory, all points in a given family $\mathcal{F}_x$ are interconnected by bonds; that is, each point has connectivity to all points in the horizon $\delta$ of itself as well as nearby neighbors.
 %%
-$u(x,t)$ and $y(x,t)$ represent the displacement and position of the point $x$ at time $t$, respectively.
+%As illustrated in Fig.~\ref{fig:1}, $\mathcal{F}_x$ (the family of $x$) is contained in the body, and  $x$ and ${x'}$ represent arbitrary points inside of the body. %%
+%{\rd{$x$ and ${x'}$ are the points given in the reference configuration}}.
 %%
-In peridynamics theory, all points, including $x$ and ${x'}$ in the horizon $\delta$ boundary, are interconnected by bonds.
+%$u(x,t)$ and $y(x,t)$ represent the displacement and position of the point $x$ at time $t$, respectively.
 %%
-That is, each point {\rd{has connectivity to all points in horizon $\delta$ as well as nearby neighbors}}.
+%In peridynamics theory, all points, including $x$ and ${x'}$ in the horizon $\delta$ boundary, are interconnected by bonds.
 %%
-{\rd{Thus, as mentioned above, peridynamics is a non-local extension of the classical continuum mechanics.}}
+%That is, each point {\rd{has connectivity to all points in horizon $\delta$ as well as nearby neighbors}}.
 %%
-{\rd{The integral equation is accustomed to calculate the current point forces per unit volume.}}
+Thus peridynamics is a non-local extension of the classical continuum mechanics, with the horizon parameter $\delta$ determining the extent of the non-local interactions modeled. 
+%%
+%{\rd{The integral equation is accustomed to calculate the current point forces per unit volume.}}
 %%
 Since spatial differentiation is not used in peridynamics, it is useful for analyzing discontinuous media and discrete particles such as cracks or damage.
 %%
-The peridynamic equation of motion is given by:
-
+%$u(x,t)$ and $y(x,t)$ represent the displacement and position of the point $x$ at time $t$, respectively.
+Denoting the displacement and position of the point $x$ at time $t$ by $u(x,t)$ and $y(x,t)$, respectively,
+the peridynamic equation of motion is given by:
 %eq1 
 \begin{equation}
 \rho(x) \, \ddot{u}(x,t) \, \, = \, \, \int_{\mathcal{F}_x} \omega\left(u(x',t)-u(x,t),x'-x\right) \, \, dV_{x'} \, \, + \, \, b(x,t), \quad t\geq0
@@ -230,7 +238,7 @@ The peridynamic equation of motion is given by:
 %%
 %Next, the relative position vector which is time-independent and displacement vector which is time-dependent of two bonded points $x$ and ${x'}$ are defined by $\zeta$ = ${x'}$ - $x$ and $\eta$ = $u$(${x'}$,$t$) - $u$($x$,$t$), respectively.
 Next, the time-independent relative position vector and time-dependent displacement vector of two bonded points $x$ and ${x'}$ are defined by $\zeta$ = ${x'}$ - $x$ and $\eta$ = $u$(${x'}$,$t$) - $u$($x$,$t$), respectively.
-$\zeta$ + $\eta$ represents the current relative position vector between the particles. The pairwise bond force density $\omega$ {\rd{should have}} the following properties: 
+$\zeta$ + $\eta$ represents the current relative position vector between the particles. The pairwise bond force density $\omega$ have the following properties: 
 %eq2
 \begin{equation}
 \omega(-\eta,-\zeta)= -\omega(\eta, \zeta),\quad(\zeta + \eta)\times\omega(\eta, \zeta)=0 \quad\forall\eta,\zeta
@@ -281,33 +289,40 @@ g(s)=cs \quad\forall s
 
 %eq8
  \begin{equation}
-s_0=\sqrt{\frac{10G_0}{\pi c\delta^5}}=\sqrt{\frac{5G_0}{9 k\delta}}
+G_0=\frac{\pi cs_0^2\delta^5}{10} 
 \end{equation}
 
 %eq9
  \begin{equation}
-G_0=\frac{\pi cs_0^2\delta^5}{10} 
+s_0=\sqrt{\frac{10G_0}{\pi c\delta^5}}=\sqrt{\frac{5G_0}{9 k\delta}}
 \end{equation}
 
-\noindent Here $k$ is the bulk modulus of the material and $G_0$ is the work required {\rd{to crack the all bonds}} per unit fracture area. As seen from the equations above, the spring constant and the critical bond stretch are composed of the bulk modulus of the material $k$ and chosen horizon boundary $\delta$. Finally, in the case of brittle materials such as glass, {\rd{related to bond stretch}}, {\rd{is defined as follows}}:
+ \noindent Here $k$ is the bulk modulus of the material and $G_0$ is the shear modulus.%, work required to crack all bonds in a unit fracture area.
+ As seen from the equations above, the spring constant and the critical bond stretch are composed of the bulk modulus of the material $k$ and the chosen horizon boundary $\delta$.
+ %%
+ However, in the case of brittle materials such as glass, the assumption that the critical bond stretch $s_0$ is constant is an oversimplification.  These materials can be better modeled by defining $s_0$ in terms of the minimum stretch $s_{min}$ between all bonds connected to a given point $x_0$ via:
 
  \begin{equation}
-s_0=s_{00}-\alpha s_{min}(t), \quad s_{min}(t)=\min_\zeta{\frac{y(t)-|\zeta|}{|\zeta|}}
+s_0=s_{00}-\alpha s_{min}(t), \quad s_{min}(t)  \, = \, \min_\zeta \, {\frac{y(x_0,t)-|\zeta|}{|\zeta|}}
 \end{equation}
 
- \noindent where $s_{min}$ is the current minimum stretch in the group of all bonds linked to a given point.
- $s_{00}$ and $\alpha$ {\rd{are constants}} and $\alpha$ is generally used about 1/4. 
+ \noindent %where $s_{min}$ is the current minimum stretch in the group of all bonds linked to a given point.
+ where $s_{00}$ and $\alpha$ are material-dependent constants with $\alpha$ generally set to about 1/4~\cite{Ref4}. 
 
 \section{Preparation of MD data using the peridynamics model }
 \label{sec:3}
 
 In this study, crack pattern data was generated using the peridynamics model implemented in LAMMPS \cite{Ref16}, an MD simulation tool.
 %%
-{\rd{A spherical indenter impacted the disk by dropping the spherical indenter in the direction perpendicular to the disk, it means from the ${+y}$ axis to disk and varying the $x$ and $z$ coordinates of the indenter to impact whole parts of the disk.}}
+A spherical indenter is designed to impact a thin cylindrical disk in the direction perpendicular to the face of the disk.
+%%
+For both the forward and inverse problems, the impact location of the indenter has varied across the face of the disk.
+%{\rd{A spherical indenter impacted the disk by dropping the spherical indenter in the direction perpendicular to the disk, it means from the ${+y}$ axis to disk and varying the $x$ and $z$ coordinates of the indenter to impact whole parts of the disk.}}
+%%
+For the forward problem, the radius and velocity of the indenter were fixed at 0.002m and 100m/s, respectively.
 %%
 For the inverse problem, the indenter varied between two radius sizes, 0.007m and 0.008m, and two velocites, 100m/s and 100.1m/s.
-%%
-For the forward problem, the indenter radius and velocity were fixed at 0.002m and 100m/s, respectively.
+In addition, the impact angle of the indenter has been simulated at both $0^{\circ}$ and $45^{\circ}$.
 %The radius of the indenter are 0.007m and 0.008m for the inverse problem
 %and the velocity are 100m/s and 100.1m/s,
 %however, for the forward problem, the radius of the indenter and velocity are fixed by 0.0020m and 100m/s respectively.
@@ -315,36 +330,39 @@ For the forward problem, the indenter radius and velocity were fixed at 0.002m a
 %The radius of the cylindrical disk is 0.037m, the thickness is 0.0025m and this disk contains 103,110 particles.
 The cylindrical disk impacted by the indenter has been assigned a radius of 0.037m, thickness of 0.0025m, and consists of 103,110 particles.
 %%
-Each particle $i$ {\rd{has volume fraction}} $V_i$=1.25 \times 10$^{-10}$m$^3$, and the density of the disk material is $\rho$=2200kg/m$^3$.
+Each particle $i$ has volume fraction $V_i$=1.25 \times 10$^{-10}$m$^3$, and the density of the disk material is $\rho$=2200kg/m$^3$.
 %%
 The `peri/pmb' peridynamic pair style was selected for the simulations conducted using LAMMPS.
 %%
 %{\rd{Pair constants are $c$, horizon, $s_{00}$ and $\alpha$ in order of 1.6863e22, 0.0015001, 0.0005, 0.25 respectively.}}
-The pair constants for the simulations have been specified as follows: $c=1.6863\mathrm{e}22$, horizon equal to $0.0015001$, $s_{00}= 0.0005$, and $\alpha = 0.25$.
+The pair constants for the simulations have been specified as follows: $c=1.6863\mathrm{e}22$, horizon $\delta$ equal to $0.0015001$, $s_{00}= 0.0005$, and $\alpha = 0.25$.
 %%
-$c$ is the spring constant for peridynamic bonds, the horizon {\rd{is a cutoff distance}},
+$c$ is the spring constant for peridynamic bonds, the horizon $\delta$ is a cutoff distance for non-local interactions,
 %%
-and the constants $s_{00}$ and $\alpha$ {\rd{are used as}} critical bond stretch parameters.
+and the constants $s_{00}$ and $\alpha$ correspond to material-dependent parameters for the critical bond stretch.
 %%
 The LAMMPS MD simulation tool (PDLAMMPS) \cite{Ref17,Ref18} is used to obtain the crack pattern data generated by the indenter using peridynamics simulations,
 %%
-{\rd{and obtain the specific data by changing the variable using for loops to adjust the velocity and radius of the indenter and the hitting point of the disk.}}
+with the hitting location, velocity, radius, and impact angle of the indenter varied as described above.
+%{\rd{and obtain the specific data by changing the variable using for loops to adjust the velocity and radius of the indenter and the hitting point of the disk.}}
 %%
-{\rd{SI units are to be used}} and the boundary is non-periodic and {\rd{shrink-wrapped [clarification?]}}.
+SI units are used and the boundary conditions are ``shrink-wrapped'' to ensure all atoms are retained in the computation.
 %%
-The particle volume {\rd{is used in a}} simple cubic lattice with lattice constant 0.001m.
+The particle volume used has been set to a simple cubic lattice with lattice constant 0.001m.
 %%
 A cylinder disk (target) with radius 0.037m and thickness 0.0025 m is initialized.
 %%
-The initial velocity of all particles is set to zero, and the hitting location, velocity, and radius of the indenter {\rd{should be saved to do damage prediction for the next steps after the MD simulation, so we set up to save the parameters information in indenter.txt}}.
+The initial velocity of all particles is set to zero, and the hitting location, velocity, impact angle, and radius of the indenter are then specified.
 %%
 %In addition, for the inverse problem, the damage is given to the whole parts of the target, but in the forward problem, peridynamics proved to be inaccurate in the boundary part, and data is obtained by only damaging 1/5 size around the center of the target.
 For the inverse problem, the indenter hit locations are varied throughout the whole of the target disk;
 in the forward problem, however, only the inner third of the disk has been targeted in order to avoid inaccuracies in the peridynamics simulation caused by the disk's boundary.
 %%
-{\rd{Finally, we declare a dump command to obtain the crack pattern image, and 2000 time-steps of running simulation to get the data are used, and we set it to 2000 time-steps in dump command as well.}}
+Once the parameters have been specified, the simulation is carried out for 2000 time steps, and the resulting crack pattern image along with the indenter parameters are saved for use in the neural network training procedure.
 %%
-{\rd{The reason for this is that the image we want for the prediction in the next step is the initial image and the final image due to the same as the meaning of 2000 in the dump command is to store the $x$,$z$ coordinates of the atoms at the initial target and 2000 time-steps of the target. }}
+%{\rd{Finally, a dump command is used to obtain the crack pattern image, and 2000 time-steps of running simulation to get the data are used, and we set it to 2000 time-steps in dump command as well.}}
+%%
+%{\rd{The reason for this is that the image we want for the prediction in the next step is the initial image and the final image due to the same as the meaning of 2000 in the dump command is to store the $x$,$z$ coordinates of the atoms at the initial target and 2000 time-steps of the target. }}
 
 \begin{figure}[h]
 \begin{subfigure}
@@ -368,10 +386,11 @@ The dump file after running the MD simulation is changed to the EnSight data for
 %%
 The figure to the left shows the initial model of the target disk, and the figure to the right shows the same disk at the end of the simulation.
 %%
-{\rd{The symmetry solution represents the right side in the figure because of the perfect lattice is used, and the perfectly spherical indenter impacted the geometric center of the target.}}
+The high level of symmetry in the peridynamics solutions is a consequence of using a perfect lattice and perfectly spherical indenter. 
 %%
-In this study, the use of asymmetric crack patterns could provide better data for real world applications
-{\rd{but focused primarily on crack patterns with symmetry, However, as the position of the hitting point change, various crack patterns can be confirmed, so that the data for machine learning is sufficient.}}
+The use of asymmetric crack patterns could provide better data for real world applications,
+but in this work we have focused primarily on the symmetric case in order to simplify the peridynamics modeling setup.
+%focused primarily on crack patterns with symmetry, However, as the position of the hitting point change, various crack patterns can be confirmed, so that the data for machine learning is sufficient.
 %4
 \section{Results and Discussion}
 \label{sec:4}
@@ -542,62 +561,80 @@ Each of these clusters has a maximum distance of less than $0.00031$mm on a disk
 \subsection{Datasets of the inverse problem}
 \label{subsec1}
 
-{\rd{Labeled input and output data are required to apply the supervised machine learning algorithm in this experiment.}}
+%The neural network model used for the inverse problem
+The inverse problem 
+follows a supervised machine learning setup which uses labeled input and output data for training.
+%{\rd{Labeled input and output data are required to apply the supervised machine learning algorithm in this experiment.}}
 %%
-{\rd{Various types of data are available to be used as input data.}}
+%{\rd{Various types of data are available to be used as input data.}}
 %%
-{\rd{Moreover, the features of the input data are determined, and it is usually expressed in vector form.}}
+%{\rd{Moreover, the features of the input data are determined, and it is usually expressed in vector form.}}
 %%
 %For the data set, image forms of damage data, which is simulated by LAMMPS, are used as an input data set.
-The input data for the inverse problem consists of damage pattern arrays obtained from LAMMPS simulations.
+The input data for the inverse problem consists of damage pattern arrays obtained from LAMMPS simulations,
+which we will denote by $\mathcal{X}$=\{$\mathcal{X}_1$,$\mathcal{X}_2$,...,$\mathcal{X}_N$\} with  $N\in\mathbb{N}$.
 %%
-{\rd{Let the damage data be}} $\mathcal{X}$=\{$\mathcal{X}_1$,$\mathcal{X}_2$,...,$\mathcal{X}_N$\} as an input data when  $N\in\mathbb{N}$.
+%{\rd{Let the damage data be}} $\mathcal{X}$=\{$\mathcal{X}_1$,$\mathcal{X}_2$,...,$\mathcal{X}_N$\} as an input data when  $N\in\mathbb{N}$.
 %%
- For supervised machine learning, labels which classify and represent the input data are required as well.
+% For supervised machine learning, labels which classify and represent the input data are required as well.
 %%
- {\rd{Consider the label set $\omega$=\{$\omega_1$,$\omega_2$,...,$\omega_M$\} in case $M\in\mathbb{N}$, and each label is assigned to the corresponding input data $\mathcal{X}$.}}
+Each damage pattern $X_i$ is classified by a label $\omega_i \in$ \{$\omega_1$,$\omega_2$,...,$\omega_M$\} which corresponds to the indenter mode (i.e.\! parameter setup) used to create that damage pattern.
+ %{\rd{Consider the label set $\omega$=\{$\omega_1$,$\omega_2$,...,$\omega_M$\} in case $M\in\mathbb{N}$, and each label is assigned to the corresponding input data $\mathcal{X}$.}}
 %%
- {\rd{The labeled data set which is called the training pair is $\rho$=($\mathcal{X}_i$,$\omega_i$).}}
+The complete labeled data set then consists of the collection of all {\emph{training pairs}} $($\mathcal{X}_i$, $\omega_i$).
 %%
- This pair represents the damage set with corresponding labels.
 %%
  % In this work, 70\% of the input data and 10\% of the input data set are used for the training set and the test set respectively and 30\% of the training data, is used for the validation set.
-  In this work, 70\% of the data set examples are used for training, 30\% of the data is used for validation, and 10\% is used for testing the model {\rd{[should add up to 100\%]}}.
+  In this work, 60\% of the data set examples have been used for training, 25\% of the data is used for validation, and 15\% is used for testing the model.
 %%
- The labeled training set is used in the supervised learning algorithm which {\rd{is chosen and designed for making a prediction model.}}
 %%
- The goal of the supervised machine learning algorithm is to efficiently {\rd{classify the training set according to the corresponding labels.}}
+% The goal of the supervised machine learning algorithm is to efficiently {\rd{classify the training set according to the corresponding labels.}}
 %%
  There are a few supervised learning algorithms which are used such as decision trees, Naive Bayes, Artificial Neural Network (ANNs), etc \cite{Ref21}.
 %%
  In this paper, Convolutional Neural Networks (CNNs) are used as the supervised learning algorithm.
+ %%
+ The labeled training and validation sets are used to train the neural network which is designed to approximate the function $\mathcal{F}$: $ \mathcal{X}_i$ $\rightarrow$ $\omega_i$
+ which maps the input damage patterns to the indenter mode which has been used to produce them.
+ %%
+% {\rd{Through the learning algorithm, the labeled training set and validation set are used as an input of a function which allows the learning algorithm to classify the relationship between the unlabeled input data $\mathcal{X}$ and the corresponding labels $\omega$.}}
 %%
- {\rd{Through the learning algorithm, the labeled training set and validation set are used as an input of a function which allows the learning algorithm to classify the relationship between the unlabeled input data $\mathcal{X}$ and the corresponding labels $\omega$.}}
+% Thus, it generates a function $\mathcal{F}$: $ \mathcal{X}_i$ $\rightarrow$ $\omega_i$ designed to map damage patterns to the collection of indenter parameters which result in similar pattern.
 %%
- Thus, it generates a function $\mathcal{F}$:$\mathcal{X}_i$ $\rightarrow$ $\omega_i$ designed to map damage patterns to the collection of indenter parameters which result in similar pattern.
+ %{\rd{ Moreover, through the validation set which is sorted from the input data, the function is optimized as a classifier, and it makes an accurate prediction model.}}
+ The validation set is used to identify and eliminate overfitting in the model and is also used to tune model hyperparameters.
+ %%
+
+ 
+ In order to evaluate the prediction model, a separate set of data, referred to as the test set, is used to assess the accuracy of the model.
 %%
-{\rd{ Moreover, through the validation set which is sorted from the input data, the function is optimized as a classifier, and it makes an accurate prediction model.}}
+%{\rd{ In the same way as the training set, the corresponding labels is assigned to the new test set.}}
 %%
- Lastly, in order to evaluate the prediction model, a separate set of data, referred to as the test set, is used to assess the accuracy of the model.
-%%
-{\rd{ In the same way as the training set, the corresponding labels is assigned to the new test set.}}
-%%
-{\rd{ This test set is sent to the prediction model, and it finally shows the accuracy of the prediction model by predicting the assigned labels of the test set.}}
+%{\rd{ This test set is sent to the prediction model, and it finally shows the accuracy of the prediction model by predicting the assigned labels of the test set.}}
 %%
 %In this process, the labels of the test set are not used for training but for prediction.
-Since the data from the test set is never used during training, the accuracy of the model predictions on this set provide a measure of how well the model generalizes beyond the data that it has already seen.
+Since the data from the test set is never used during training, the accuracy of the model predictions on this set provides a measure of how well the model generalizes beyond the data that it has already seen.
 %%
  Thus, the prediction model predicts the corresponding labels of each component of the data set, and the predicted labels are compared with the desired labels of the test pairs.
 %%
- The success rate of prediction on the test set is used as the primary evaluation measure, and it shows the accuracy of the model resulting from the supervised learning algorithm.
+ The success rate of prediction on the test set is used as the primary evaluation measure, and it shows the accuracy of the model achieved by the learning procedure. %supervised learning algorithm.
+ %%
+
+
+In this section we introduce a neural network model designed to approach the {\emph{inverse problem}} associated with the peridynamics crack simulations.
 %%
-{\rd{[Needs a transition.]}}
 %%
-An inverse problem is a mathematical way to predict the parameters through the measured and observed data.
+In general, solving an inverse problem entails recovering the initial conditions of a simulation from the final result.
 %%
-{\rd{ In this work, the crack pattern on a disk by an indenter was supposed to be analyzed depending on the different value of the parameters of the indenter through the way of the inverse problem.}}
+More specifically, the inverse problem considered in this section consists of recovering the specific mode of indenter parameters which have been used to produced a specified crack pattern.
 %%
-{\rd{ The purpose of this section is using the concept of the inverse problem for the crack pattern to predict the velocity, radius, angle and hitting points of the indenter.}}
+To this end, a CNN model is introduced which is designed to predict the velocity, radius, and impact angle corresponding to a given input crack pattern.
+%An inverse problem is a mathematical way to predict the parameters through the measured and observed data.
+%%
+%In this work, the crack pattern on a disk by an indenter was supposed to be analyzed depending on the different value of the parameters of the indenter through the way of the inverse problem.
+%%
+%{\rd{ The purpose of this section is using the concept of the inverse problem for the crack pattern to predict the velocity, radius, angle and hitting points of the indenter.}}
+
 %4.2.1
 \subsubsection{Preparation of data}
 \label{subsubsec1}
@@ -628,23 +665,31 @@ Mode8 & r=0.008m, v=100.1m/s, 45$^{\circ}$ \\
 \end{tabular}
 \end{table}
 %Matconvnet \cite{Ref22} based on MATLAB code was applied to the inverse problem using numpy array as input image data.
-The MATLAB toolbox Matconvnet~\cite{Ref22} has been applied to the inverse problem using damage pattern arrays as input data.
+The MATLAB toolbox Matconvnet~\cite{Ref22} has been applied to the inverse problem using damage pattern arrays of resolution $128\times128$ as input data.
 %%
-{\rd{ Prior to considering the results,}} focusing on the input data using LAMMPS, {\rd{we can classify into 8 modes changing the 4 variables}} (the radius of the indenter, the velocity of the indenter, the angle of the indenter, and the hitting location of the disk) and obtained 7,200 training examples and 1,200 test examples {\rd{[what about validation?]}}.
+%{\rd{ Prior to considering the results,}} focusing on the input data using LAMMPS, {\rd{
+The output data, corresponding to the classification of indenter parameters, can be classified into 8 modes;
+these modes correspond to the values of the radius, velocity, and impact angle of the indenter as shown in Table 2.
 %%
- The mode according to the variation of the variable is set as a combination of the velocity, angle, radius of the indenter and the hitting location of the disk and is shown in Table. 2.
+The hitting location on the disk has also been varied to create a data set with 5,040 training examples, 2,160 validation examples, and 1,200 test examples.
 %%
- Training data set and test data set are distinguished to apply input image data set to machine learning algorithm.
+
+
 %%
- The array size of the inputs has been selected to be 128 pixels by 128 pixels. % and the number is 7200.
+% The mode according to the variation of the variable is set as a combination of the velocity, angle, radius of the indenter and the hitting location of the disk and is shown in Table. 2.
 %%
- 2,160 (30\% of 7,200 training data set) were designated as a validation set.
- {\rd{[The validation set is supposed to be separate from the training set; is this the case?]}}
+% Training data set and test data set are distinguished to apply input image data set to machine learning algorithm.
 %%
- {\rd{In this way, the image size of the test data set is 128 pixels by 128 pixels, and the number of images is 1200.}}
+% The array size of the inputs has been selected to be 128 pixels by 128 pixels. % and the number is 7200.
 %%
- {\rd{360 (30\% of 1,200 test data set) were designated as a validation set in the test data set.}}
+% 2,160 (30\% of 7,200 training data set) were designated as a validation set.
+% {\rd{[The validation set is supposed to be separate from the training set; is this the case?]}}
+%%
+% {\rd{In this way, the image size of the test data set is 128 pixels by 128 pixels, and the number of images is 1200.}}
+%%
+% {\rd{360 (30\% of 1,200 test data set) were designated as a validation set in the test data set.}}
 %4.2.2
+
 \subsubsection{Reference annotation}
 \label{subsubsec2}
 
@@ -662,9 +707,9 @@ The training data set and the test data set are made into a .mat file that can b
 %4.2.3
 \subsubsection{Convolutional neural network for inverse problem}
 \label{subsubsec3}
-Deep learning is a subset of AI and machine learning {\rd{that can bring state-of-the-art technology and accuracy}} in problems such as object detection, text generation, and image recognition.
+Deep learning is a subset of AI and machine learning capable of achieving state-of-the-art results on problems such as object detection, text generation, and image recognition.
 %%
-{\rd{Using existing human knowledge in annotated data}}, various cognitive and inferential tasks can be performed \cite{Ref23,Ref24,Ref25}.
+Using existing human knowledge in the form of annotated data, various cognitive and inferential tasks can be performed \cite{Ref23,Ref24,Ref25}.
 %%
 Convolutional neural networks are widely used to solve computer vision problems such as classification of images and object detection.
 %%
@@ -672,13 +717,14 @@ These convolutional neural networks consist of several layers which can be tuned
 %%
 In this work for damage analysis using machine learning, a similar structure of AlexNet are chosen \cite{Ref26}.
 %%
-{\rd{The CNNs adjusts two steps through the neural layers such as feature extraction and feature classification.}}
+The CNN processes the input damage pattern in two steps: a feature extraction step carried out by the convolutional layers, followed by a classification step performed by the fully connected layers.
+%{\rd{The CNNs adjusts two steps through the neural layers such as feature extraction and feature classification.}}
 %%
 First, feature extraction uses a 2D damage array of size $N_{row}$ $\times$ $N_{col}$ for input data and produces a vector of size 8 $\times$ 8 $\times$ 100.
 %%
 Second, the feature vector is converted to a classification vector of size 1 $\times$ $N_{c}$, where $N_{c}$ is the number of classification categories.
 %%
-{\rd{This work accounts for eight categories from mode 1 to mode 8.}}
+This work accounts for eight categories corresponding to each of the eight distinct indenter modes.
 
 %4.2.3
 \subsubsection{Feature extraction and classification}
@@ -692,14 +738,18 @@ The feature vector is generated from the input training data by applying success
 the 64 pixels by 64 pixels array becomes 32 pixels by 32 pixels and 16 pixels by 16 pixels image becomes 8 pixels by 8 pixels.
 \\
 \\
-2) The rectified linear unit layer \cite{Ref28} applies an activation function defined as the positive part of its argument and this activation function is shown in Eq.(11).
-
+2) The rectified linear unit (ReLU) layer \cite{Ref28} applies an activation function which is defined as the positive part of its argument: %and this activation function is shown in Eq.(11).
+%%
 \begin{equation}
 ReLU(x) = x^{+} = \max(0,x) 
 \end{equation}
-
+%%
 where $x$ is the input data to a neuron. A ReLU performs a threshold operation
-to each element of the input where any value less than zero is set to zero. ReLU improves neural network is by speeding up training due to the simplicity of evaluating the ReLU activation.
+to each element of the input where any value less than zero is set to zero.
+%%ReLU improves neural network by speeding up training due to the simplicity of evaluating the ReLU activation.
+%%
+%%The rectified linear unit (ReLU) has been selected as the network's activation function;
+The choice of the ReLU activation facilitates faster training due to the simplicity of its function and derivative evaluations.
 \\
 \\
 3) SoftMax layer \cite{Ref29} is often used in the final layer of a neural network-based classifier.  It takes a vector of arbitrary real-valued scores (in z) and reduces it to a vector of values between zero and one that sum to one.
@@ -737,17 +787,20 @@ After the two convolution layers, a fully-connected layer with softmax activatio
 %%
 In the first convolutional layer, the “weights” are the filters being learned and initialized with random numbers from a Gaussian distribution.
 %%
-The filters are 2 by 2 spatial resolution with 1 filter depth and a number of kernels are 200.
+The filters are 2 by 2 spatial resolution with 1 filter depth and the number of kernels is 200.
 %%
 The next layer is a max pooling layer which takes 2 by 2 sliding window with a stride of 2.
 %%
 The spatial resolution will be decreased due to the stride 2 in max pooling layer.
 %%
-The next layer is the rectified linear unit (ReLU).
+%The next layer is the rectified linear unit (ReLU).
+The ReLU activation function is then applied to introduce non-linearities into the modeling framework.
 %%
-{\rd{It promotes the convergence of stochastic gradient descent through the negative value becomes zero.}}
+%The rectified linear unit (ReLU) has been selected as the network's activation function; this choice facilitates faster training due to the simplicity of evaluating the ReLU function and its derivative.
 %%
-{\rd{By doing this activation, the enhancement of the speed of convergence can be seen when training the data. }}
+%{\rd{It promotes the convergence of stochastic gradient descent through the negative value becomes zero.}}
+%%
+%{\rd{By doing this activation, the enhancement of the speed of convergence can be seen when training the data. }}
 \label{subsubsec3}
 \begin{figure}
 \centering
@@ -755,12 +808,13 @@ The next layer is the rectified linear unit (ReLU).
 \caption{Objective and error plots during the training.}
 \label{fig:5}       
 \end{figure}
-The last layer is fully-connected layer have full connections with the activation functions in the previous convolution layers.
+The last layer is a fully-connected layer which has dense connections with the activation function outputs from the previous convolution layers.
 %%
-{\rd{In this study, the final layer should be 1x1 spatial resolution and since the size of the filter should be classified as 8 modes, it should be unconditionally 8.}}
+The final layer is designed to produce 8 ouput values corresponding to the model's predicted likelihood for each of the 8 indenter modes.
+%be 1x1 spatial resolution and since the size of the filter should be classified as 8 modes, it should be unconditionally 8.
 %%%
 Using the CNNs mentioned above with the 7200 training data and the 1200 test data, the learning rate is 0.001, the batch size is 20, and the epoch is 25 for the training. 
-During the training procedure for the CNN, {\rd{each successful epoch produces up to the plots (objective and error plots).}}
+%During the training procedure for the CNN, {\rd{each successful epoch produces up to the plots (objective and error plots).}}
 %%
 In this convolutional neural network, MatConvNet minimizes the objective which represents the loss function and y axis of energy represents to measure the magnitude of loss.
 %%
