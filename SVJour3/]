@@ -1,0 +1,11 @@
+Filesystem     1MB-blocks      Used Available Use% Mounted on
+dev                6244MB       0MB    6244MB   0% /dev
+run                6252MB       1MB    6251MB   1% /run
+/dev/sda5         62728MB   50911MB    8601MB  86% /
+tmpfs              6252MB     165MB    6088MB   3% /dev/shm
+tmpfs              6252MB       0MB    6252MB   0% /sys/fs/cgroup
+tmpfs              6252MB       1MB    6252MB   1% /tmp
+/dev/sda6        250909MB  151331MB   86762MB  64% /home
+/dev/sda1           101MB      52MB      50MB  52% /boot/efi
+/dev/sda7       1423201MB 1200246MB  222956MB  85% /media/Backup
+tmpfs              1251MB       1MB    1251MB   1% /run/user/1000

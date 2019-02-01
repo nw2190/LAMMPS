@@ -52,7 +52,7 @@
 %\usepackage{epstopdf}
 \usepackage[outdir=./figure/]{epstopdf}
 %\usepackage[outdir=./]{epstopdf}
-%\graphicspath{{./figure/}}
+%\graphicspath{{./}}
 %
 % \usepackage{mathptmx}      % use Times fonts if available on your TeX system
 %
@@ -68,8 +68,8 @@
 %
 
 
-\usepackage{color}
-\newcommand{\rd}[1]{{\color{red}{#1}}}
+%\usepackage{color}
+%\newcommand{\rd}[1]{{\color{red}{#1}}}
 
 
 \begin{document}
@@ -181,7 +181,7 @@ By combining the accuracy of the peridynamics model with the computational speed
 \begin{figure}
 % Use the relevant command to insert your figure file.
 % For example, with the graphicx package use
-  \includegraphics{figure/body.eps}
+  \includegraphics{body.eps}
 % figure caption is below the figure
 \caption{The composition of peridynamics model.}
 \label{fig:1}       % Give a unique label
@@ -254,7 +254,7 @@ $\zeta$ + $\eta$ represents the current relative position vector between the par
 s=\frac{|\zeta+\eta|-|\zeta|}{|\zeta|}=\frac{y-|\zeta|}{|\zeta|}
 \end{equation}
 
-\noindent where $f$ is the scalar valued bond force defined in relation to bond stretch $s$. The best way {\rf{to apply failure}} to the constitutive model is to allow the bonds to break when they exceed a predefined limit. If the bond is broken, the tensile strength cannot be restored. The PMB model is defined as follows:
+\noindent where $f$ is the scalar valued bond force defined in relation to bond stretch $s$. The best way to apply failure to the constitutive model is to allow the bonds to break when they exceed a predefined limit. If the bond is broken, the tensile strength cannot be restored. The PMB model is defined as follows:
 %eq4
 \begin{equation}
 f(y(t),\zeta)=g(s(t,\zeta))\mu(t,\zeta)
@@ -366,13 +366,13 @@ Once the parameters have been specified, the simulation is carried out for 2000 
 
 \begin{figure}[h]
 \begin{subfigure}
-  %\includegraphics[width=5.8cm,height=5.8cm]{figure/initialdisk.eps}
-  \includegraphics[height=5.8cm]{figure/initialdisk.eps}
+  %\includegraphics[width=5.8cm,height=5.8cm]{initialdisk.eps}
+  \includegraphics[height=5.8cm]{initialdisk.eps}
 \label{initial}
 \end{subfigure}
 \begin{subfigure}
-  %\includegraphics[width=5.8cm,height=5.8cm]{figure/damage.eps}
-  \includegraphics[height=5.8cm]{figure/damage.eps}
+  %\includegraphics[width=5.8cm,height=5.8cm]{damage.eps}
+  \includegraphics[height=5.8cm]{damage.eps}
 \label{damage}
 \end{subfigure}
 \caption{The initial appearance of the disk (Left) and the data results after hitting the indenter onto the disk (Right).}
@@ -397,7 +397,7 @@ but in this work we have focused primarily on the symmetric case in order to sim
 
 
 \begin{figure}
-  \includegraphics[width=12cm, height=7cm]{figure/diagram.eps}
+  \includegraphics[width=12cm, height=7cm]{diagram.eps}
 
 \caption{Diagram of forward problem and inverse problem using machine learning algorithm.}
 \label{fig:3}       
@@ -425,7 +425,7 @@ To accomplish this task, we propose the use of a deep neural network which consi
 
 \begin{figure}
   \centering
-  \includegraphics[scale=0.25]{figure/forward_figure.eps}
+  \includegraphics[scale=0.25]{forward_figure.eps}
 \caption{Network structure for the forward problem.  Features have been labeled by colors corresponding to the type of network layer used to produce them.}
 \label{fig:forward}       
 \end{figure}
@@ -459,10 +459,10 @@ The model was trained using the standard ADAM optimization algorithm and backpro
 
 \begin{figure}
   \centering
-  %\includegraphics[scale=0.25]{figure/true_soln_2300.eps}
-  %\includegraphics[scale=0.25]{figure/prediction_2300.eps}
-  \includegraphics[scale=1.1]{figure/New_Solutions/soln_19050.eps}
-  \includegraphics[scale=1.1]{figure/New_Solutions/pred_19050.eps}
+  %\includegraphics[scale=0.25]{true_soln_2300.eps}
+  %\includegraphics[scale=0.25]{prediction_2300.eps}
+  \includegraphics[scale=1.1]{soln_19050.eps}
+  \includegraphics[scale=1.1]{pred_19050.eps}
 \caption{Example of a true damage pattern computed using LAMMPS (left) along with the corresponding neural network prediction (right).}
 \label{fig:forward_results}       
 \end{figure}
@@ -490,18 +490,18 @@ After training, the neural network's damage predictions are seen to closely appr
 \begin{figure}
   \centering
   \begin{tabular}{ccc}
-  %\includegraphics[scale=0.3]{figure/Solutions/solution_200.eps} &
-  %\includegraphics[scale=0.3]{figure/Solutions/solution_201.eps} &
-  %\includegraphics[scale=0.3]{figure/Solutions/solution_202.eps} \\
-  %\includegraphics[scale=0.3]{figure/Solutions/solution_2000.eps} &
-  %\includegraphics[scale=0.3]{figure/Solutions/solution_2001.eps} &
-  %\includegraphics[scale=0.3]{figure/Solutions/solution_2002.eps}
-  \includegraphics[scale=0.75]{figure/New_Solutions/true_soln_1510.eps} &
-  \includegraphics[scale=0.75]{figure/New_Solutions/true_soln_1511.eps} &
-  \includegraphics[scale=0.75]{figure/New_Solutions/true_soln_1512.eps} \\
-  \includegraphics[scale=0.75]{figure/New_Solutions/true_soln_19049.eps} &
-  \includegraphics[scale=0.75]{figure/New_Solutions/true_soln_19050.eps} &
-  \includegraphics[scale=0.75]{figure/New_Solutions/true_soln_19051.eps} 
+  %\includegraphics[scale=0.3]{Solutions/solution_200.eps} &
+  %\includegraphics[scale=0.3]{Solutions/solution_201.eps} &
+  %\includegraphics[scale=0.3]{Solutions/solution_202.eps} \\
+  %\includegraphics[scale=0.3]{Solutions/solution_2000.eps} &
+  %\includegraphics[scale=0.3]{Solutions/solution_2001.eps} &
+  %\includegraphics[scale=0.3]{Solutions/solution_2002.eps}
+  \includegraphics[scale=0.75]{true_soln_1510.eps} &
+  \includegraphics[scale=0.75]{true_soln_1511.eps} &
+  \includegraphics[scale=0.75]{true_soln_1512.eps} \\
+  \includegraphics[scale=0.75]{true_soln_19049.eps} &
+  \includegraphics[scale=0.75]{true_soln_19050.eps} &
+  \includegraphics[scale=0.75]{true_soln_19051.eps} 
   \end{tabular}
   \begin{tabular}{lcclc}
   %Top-Left:   &  (0.001139, -0.003129) & & Bottom-Left:   & (-0.010100, 0.002305) \\
@@ -694,13 +694,13 @@ The hitting location on the disk has also been varied to create a data set with 
 \label{subsubsec2}
 
 \begin{figure}
-\includegraphics[width=10cm, height=5cm]{figure/label.eps}
+\includegraphics[width=10cm, height=5cm]{label.eps}
 \caption{Structure of data in the .mat file}
 \label{fig:4}       
 \end{figure}
 The training data set and the test data set are made into a .mat file that can be applied to Matconvnet and its structure is shown in Fig. 7. The structure of the data in the .mat file is largely divided into `Images' and `Meta'. There are `Labels', `Set' and `Data' classes in the `Images' class. `Labels' displays labels on images of input data sets. Labels were displayed randomly from 1 to 8 since data has 8modes. In the set class, training data, test data, and validation data are indicated by 1, 2, and 3, respectively. In the `Data' class, the data obtained from the LAMMPS is converted to a numpy array and expresses it as a 4-D single matrix. Finally, there are `Set' and `Classes' in the `Meta' class. The `Set' contains the words `train', `test' and `val' which are related to the `Images' class and indicate that the 1 2 3 in the set of images class is training data, test data and validation data respectively. The `Classes' in the `Meta' specifies a class from 1 to 8 due to this inverse problem has a mode of 8.
 \begin{figure}
-\includegraphics[width=12cm,height=5cm]{figure/cnn.eps}
+\includegraphics[width=12cm,height=5cm]{cnn.eps}
 \caption{Architecture of convolution neural networks (CNNs) for inverse problem and rectification (ReLU) and downsampling layers (MaxPooling) represented in section 4.1.4. This figure shows the data size, kernel size and the numbers of the output feature and produced by each filter layers.}
 \label{fig:5}       
 \end{figure}
@@ -804,7 +804,7 @@ The ReLU activation function is then applied to introduce non-linearities into t
 \label{subsubsec3}
 \begin{figure}
 \centering
-\includegraphics[height=10cm]{figure/error1.eps}
+\includegraphics[height=10cm]{error1.eps}
 \caption{Objective and error plots during the training.}
 \label{fig:5}       
 \end{figure}
