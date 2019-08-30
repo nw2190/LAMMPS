@@ -81,7 +81,7 @@ $ paraview s_disk_0.case &!
 
 
 
-### Example
+### Example Usage
 
 ```console
 # Generate Data with LAMMPS
@@ -104,10 +104,10 @@ $ python load.py --x_val x --y_val y
 $ python Convert_Predictions.py
 
 # View prediction in Paraview
-$ paraview p_disk_0.case &!
+$ paraview p_disk_0.case &
 
 # Plot true solution with id ID
 $ python load_soln.py --ID ID
 $ python Convert_Solutions.py
-$ paraview s_disk_0.case &!
+$ paraview s_disk_0.case &
 ```
