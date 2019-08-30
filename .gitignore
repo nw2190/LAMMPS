@@ -119,13 +119,15 @@ solution_dump_*
 *.xyz
 *.damage
 
-Code/Arrays
-Code/Arrays/*
-Code/Data
-Code/Data/*
-Code/DATA.npy
-Code/TARGETS.npy
-Code/Model
-Code/Model/*
-Code/BEST_Model/Checkpoints
-Code/BEST_Model/Checkpoints/*
+Arrays
+Arrays/*
+Data
+Data/*
+DATA.npy
+TARGETS.npy
+Model
+Model/*
+BEST_Model/Checkpoints
+BEST_Model/Checkpoints/*
+TMP
+TMP/*
