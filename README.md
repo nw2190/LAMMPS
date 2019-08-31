@@ -15,8 +15,8 @@ TensorFlow code trained on LAMMPS peridynamics simulations
 
 ```console
 # Generate Data with LAMMPS:
-$ ./Run_LAMMPS.sh
-OR
+
+$ mkdir Data
 $ OMP_NUM_THREADS=8 lmp -in in.peri
 OR
 $ lammps -in in.peri
