@@ -4,7 +4,7 @@ TensorFlow code trained on LAMMPS peridynamics simulations
 
 ### Dependencies
 * [LAMMPS](https://github.com/lammps/lammps) - The molecular dynamics software used to generate data (must be compiled with the `PKG_PERI=on` flag).
-* [Python](https://www.python.org/) - The code is designed to work with Python 2.7 and Python 3.5 or greater.
+* [Python](https://www.python.org/) - The code is designed to work with Python 2.7 and Python 3.5 or greater.  Python2 is required for reading/writing in the LAMMPS format; Python3 is required for the TensorFlow network implementation.
 * [TensorFlow](https://www.tensorflow.org/install/) - The software library used to implement the deep convolutional neural network in Python.
 * [NumPy](http://www.numpy.org/) - Arrays are processed in Numpy prior to being fed as tensors into TensorFlow.
 * [Pandas](https://pandas.pydata.org/) - Python module used to read raw LAMMPS dump files into Python.
@@ -67,15 +67,15 @@ $ cd Frozen
 $ python load.py --x_val x --y_val y
 
 # Convert prediction to dump file:
-$ python Convert_Predictions.py
+$ python2 Convert_Predictions.py
 
 # View prediction in Paraview:
-$ paraview p_disk_0.case &!
+$ paraview p_disk_0.case &
 
 # Plot true solution with id ID:
 $ python load_soln.py --ID ID
-$ python Convert_Solutions.py
-$ paraview s_disk_0.case &!
+$ python2 Convert_Solutions.py
+$ paraview s_disk_0.case &
 ```
 
 
@@ -101,13 +101,13 @@ $ cd Frozen
 $ python load.py --x_val x --y_val y
 
 # Convert prediction to dump file
-$ python Convert_Predictions.py
+$ python2 Convert_Predictions.py
 
 # View prediction in Paraview
 $ paraview p_disk_0.case &
 
 # Plot true solution with id ID
 $ python load_soln.py --ID ID
-$ python Convert_Solutions.py
+$ python2 Convert_Solutions.py
 $ paraview s_disk_0.case &
 ```
