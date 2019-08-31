@@ -1,6 +1,6 @@
 # Peri-Net: Analysis of Crack Patterns Using Deep Neural Networks
 
-TensorFlow code trained on LAMMPS peridynamics simulations
+TensorFlow code for the forward model of the [Peri-Net](https://link.springer.com/article/10.1007/s42102-019-00013-x) neural network for modeling LAMMPS peridynamics simulations.
 
 ### Dependencies
 * [LAMMPS](https://github.com/lammps/lammps) - The molecular dynamics software used to generate data (must be compiled with the `PKG_PERI=on` flag).
