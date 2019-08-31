@@ -127,6 +127,10 @@ DATA.npy
 TARGETS.npy
 Model
 Model/*
+Model_Adam
+Model_Adam/*
+BEST_Model
+BEST_Model/
 BEST_Model/Checkpoints
 BEST_Model/Checkpoints/*
 TMP
