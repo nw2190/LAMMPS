@@ -79,6 +79,6 @@ $ paraview s_disk_0.case &
 ```
 
 <p align="center">
-  <img width="750" src="figures/prediction_2300.png" style="margin: auto;">
+  <img width="500" src="figures/prediction_2300.png" style="margin: auto;">
 </p>
 
