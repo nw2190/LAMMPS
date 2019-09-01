@@ -8,7 +8,7 @@ TensorFlow code for the forward model of the [Peri-Net](https://link.springer.co
 * [TensorFlow](https://www.tensorflow.org/install/) - The software library used to implement the deep convolutional neural network in Python.
 * [NumPy](http://www.numpy.org/) - Arrays are processed in Numpy prior to being fed as tensors into TensorFlow.
 * [Pandas](https://pandas.pydata.org/) - Python module used to read raw LAMMPS dump files into Python.
-
+* [ParaView](https://www.paraview.org/) - Open-source data visualization software used to analyze damage patterns.
     
 
 ## Generating Data
